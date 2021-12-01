@@ -2,7 +2,7 @@ import Commerce from './components/Commerce';
 
 function App() {
   return (
-    <div className='container'>
+    <div>
       <Commerce />
     </div>
   );

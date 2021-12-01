@@ -46,8 +46,10 @@ class Commerce extends React.Component {
         return(
             <div>
                 <Header />
-                {storeDisplay 
-                && <CodeItemsForSale 
+                {storeDisplay.display 
+                && <CodeItemsForSale
+                    loggedIn={login.loggedIn}
+                    loginScreen={login.display}
                     codeItems={storeDisplay.items}
                     cart={cart}
                     updateState={this.updateState} 

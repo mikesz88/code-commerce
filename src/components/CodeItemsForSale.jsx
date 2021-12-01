@@ -11,30 +11,40 @@ class CodeItemsForSale extends React.Component {
         this.props.updateSubState('commerceComponents', 'cart', {[name]: value});
     }
 
+    login = () => {
+        this.props.updateSubState('commerceComponents', 'storeDisplay', {'display': false});
+        this.props.updateSubState('commerceComponents', 'login', {'display': true});
+    }
+
+    checkLogin = (name, value) => {
+        this.props.loggedIn ? this.updateCart(name, value) : this.login();
+    }
+
     
     render() {
         const { codeItems } = this.props;
 
         return(
-            <div className={s.codeStoreContainer}>
+            <div className={`container`}>
+                <div className={`${s.loginCenter}`}>
+                    <button className={`btn btn-primary round-pill`} onClick={this.login}>Log in</button>
+                </div>
+                <div className={`${s.codeStoreContainer}`}>
                 {Object.keys(codeItems).map(code => (
                     <div className={s.cardContainer}>
                         <h3 className={`header-sm`}>{code}</h3>
-                        <img src="" alt="" />
-                        <p className={`caption`}>${codeItems[code]}</p>
+                        <img src={codeItems[code]['img']} alt="" />
+                        <p className={`caption`}>${codeItems[code]['price']}</p>
                         {!Object.keys(this.props.cart).includes(code)
-                        ? <button onClick={() => this.updateCart(code, codeItems[code])}>Add to Cart</button>
+                        ? <button onClick={() => this.checkLogin(code, codeItems[code]['price'])}>Add to Cart</button>
                         : <button onClick={() => this.props.deleteSubState('commerceComponents', 'cart', code)}>Remove from Cart</button>}
                     </div>
                 ))}
-                <div>
-                    <h3 className={`header-md`}> 
-    {/* I am here. I now need to make a condition that if they are not logged in, they cannot do anything until then */}
-    {/* Remember to take your time. You are here to understand, not speed through it. */}
-    {/* You just accomplished interactive button! */}
-                        Click any to add to cart!
-                    </h3>
+                </div>
+                <div className={s.directions}>
+                    <h3 className={`header-md`}> Click any to add to cart!</h3>
                     <p className={`caption`}>You must log in first before you are able to add to cart!</p>
+                    <button className={`btn btn-primary round-pill`} onClick={this.login}>Log in</button>
                 </div>
             </div>
         )
