@@ -1,3 +1,47 @@
+
+.formContainer {
+    position: relative;
+}
+
+.direction {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+}
+
+.flexContainer,
+.formContainer {
+    display: flex;
+    margin: 0 auto;
+    flex-direction: column;
+    max-width: 300px;
+    justify-content: center;
+}
+
+.flexContainer .input,
+.flexContainer .width {
+    max-width: 300px;
+}
+
+.flexContainer .input {
+    border: 1px solid #ccc;
+}
+
+.flexContainer .finePrint {
+    font-size: 0.75rem;
+}
+
+.flexContainer .marginAndPadding{
+    margin: 0.25rem 0;
+    padding: 0.25rem;
+}
+
+
+
+.flexContainer input:focus {
+    outline: none;
+}
+
 .surroundingLine {
     display: flex;
 }
@@ -16,4 +60,27 @@
 
 .surroundingLine:after {
     margin-left: 10px
+}
+
+.flexContainer .deleteBorder {
+    border: none;
+    flex: 1;
+}
+
+.flexContainer .passwordWithEye {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    max-width: 300px;
+    border: 1px solid #ccc;
+}
+
+.formFooter {
+    font-size: 0.5rem;
+    text-align: center;
+}
+
+.formFooter a {
+    padding-left: 5px;
+    padding-right: 5px;
 }
