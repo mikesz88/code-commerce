@@ -56,7 +56,9 @@ class Commerce extends React.Component {
                     updateSubState={this.updateSubState}
                     deleteSubState={this.deleteStateVariable}
                 />}
-                {login.display && <Login />}
+                {login.display && <Login 
+                    users={users}
+                />}
                 {cart.display && <Cart />}
                 {shipping.display && <Shipping />}
                 {payment.display && <Payment />}

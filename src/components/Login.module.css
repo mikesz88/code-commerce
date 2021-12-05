@@ -36,7 +36,24 @@
     padding: 0.25rem;
 }
 
+.flexContainer .error {
+    color: red;
+    font-size: 0.75rem;
+}
 
+.flexContainer .generalError {
+    display: none;
+}
+
+/* .flexContainer .input */ .redError {
+    background-color: rgba(255, 0, 0, 0.1);
+    border: solid 1px red;
+}
+
+.redTransparentError {
+    background-color: transparent;
+    border: none;
+}
 
 .flexContainer input:focus {
     outline: none;

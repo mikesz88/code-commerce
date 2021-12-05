@@ -16,6 +16,14 @@ const fakeUser = {
     payment: undefined
 }
 
+const michaelUser = {
+    email: 'michael@devslopes.com',
+    password: 'Devslopes0!',
+    cart: undefined,
+    shipping: undefined,
+    payment: undefined
+}
+
 const commerceComponents = {
     storeDisplay : {
         display: false,
@@ -71,7 +79,8 @@ const commerceComponents = {
 
 export const stateComponents = {
     users: {
-        fakeUser
+        fakeUser,
+        michaelUser
     },
     commerceComponents,
 }

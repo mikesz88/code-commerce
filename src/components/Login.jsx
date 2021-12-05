@@ -1,11 +1,8 @@
 /* 
-1. Create the Code for the error messages
+1. Work on the password issue with the exclamation
 2. On submit I need to store the user on to the Commerce State User & change component to cart
-3. Create the logic for signing in 
-4. error message for email if already existed
-5. Make a firstName and LastName function to show diff error messages.
-6. Show a broad message on teh top above email address to show that there are error messages.
-6. CSS to show the UI from the mock up
+3. Create the logic for signing in.
+4. finish the cancel function to change the display back to the store front
 */
 
 import React from "react";
@@ -28,7 +25,7 @@ class Login extends React.Component {
       revealPassword: 'password',
       userType: 'newUser',
       newUser: INIT_CARD,
-      error: {}
+      error: {},
     };
   }
 
@@ -51,10 +48,31 @@ class Login extends React.Component {
         ? errorValue = { ...errorValue, [checkError]: error[checkError]}
         : errorValue = { ...errorValue, [checkError]: 'Required'};
         isError = true;
+
     }
     });
-    this.setState({ error: errorValue });
+    this.setState({ error: errorValue }, this.generalError);
     return isError;
+  }
+
+  generalError = () => {
+    const errorObject = this.state.error;
+    const errors = Object.keys(errorObject);
+    const divMessage = document.getElementById('generalError');
+    divMessage.style.display = 'none';
+
+    if (!errors.length) {
+      divMessage.style.display = 'block';
+    }
+
+    if (errors.length) {
+      errors.forEach(errorKey => {
+        if (errorObject[errorKey] !== undefined) {
+          divMessage.style.display = 'block';
+        }
+      })
+    }
+
   }
 
   handleSubmit = (e) => {
@@ -63,6 +81,10 @@ class Login extends React.Component {
     if (!errorCheck) {
         this.setState({
           newUser: INIT_CARD,
+        }, () => {
+          const divMessage = document.getElementById('generalError');
+          divMessage.style.display = 'none';
+
         });
     }  
   };
@@ -77,9 +99,15 @@ class Login extends React.Component {
   }
 
   backToStore = () => {
+    const divMessage = document.getElementById('generalError');
+    divMessage.style.display = 'none';
     this.setState({
-      newUser: INIT_CARD
-    })
+      eye: false,
+      revealPassword: 'password',
+      userType: 'newUser',
+      newUser: INIT_CARD,
+      error: {},
+    });
   }
 
   eyeFlip = () => {
@@ -99,10 +127,16 @@ class Login extends React.Component {
       }
   }
 
-  lettersOnlyCheck = value => {
+  firstNameCheck = value => {
     const letterRegex = /^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/gi;
     const error = letterRegex.test(value);
-    return !error ? 'Must be letters Only' : undefined;
+    return !error ? 'Please enter a valide First Name' : undefined;
+  }
+
+  lastNameCheck = value => {
+    const letterRegex = /^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/gi;
+    const error = letterRegex.test(value);
+    return !error ? 'Please enter a valide Last Name' : undefined;
   }
 
   postCodeCheck = value => {
@@ -122,10 +156,18 @@ class Login extends React.Component {
     return !error ? 'This does not fit the requirement. Try again!' : undefined;
   }
 
+  emailAlreadyTaken = value => {
+    const users = Object.keys(this.props.users);
+    console.log(users);
+    const alreadyTaken = users.some(user => this.props.users[user]['email'] === value);
+    // console.log(this.props.users[user]['email']);
+    return alreadyTaken ? 'This email is already used. Try another one.' : undefined;
+  }
+
   emailCheck = value => {
     const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
     const error = emailRegex.test(value);
-    return !error ? 'This is not a proper email. Try again!' : undefined;
+    return !error ? 'This is not a proper email. Try again!' : this.emailAlreadyTaken(value);
   }
 
   handleValidations = (target, value) => {
@@ -144,11 +186,11 @@ class Login extends React.Component {
         this.setState(prevState => ({  error: {    ...prevState.error,    confirmPassword: errorText }}))
         break;    
       case 'firstName':
-        errorText = this.lettersOnlyCheck(value);
+        errorText = this.firstNameCheck(value);
         this.setState(prevState => ({  error: {    ...prevState.error,    firstName: errorText }}))
         break;      
       case 'lastName':
-        errorText = this.lettersOnlyCheck(value);
+        errorText = this.lastNameCheck(value);
         this.setState(prevState => ({  error: {    ...prevState.error,    lastName: errorText }}))
         break;
       case 'postCode':
@@ -162,13 +204,17 @@ class Login extends React.Component {
 
   handleBlur = e => this.handleValidations(e.target.name, e.target.value);
 
+
+
   newUser = () => {
     return (
       <div className={`${s.flexContainer}`}>
+        <div id='generalError' className={`${s.error} ${s.generalError}`}>We're sorry, but one or more fields are incomplete or incorrect. <u>Find error(s)</u>.</div>
         <h2 className={`header-sm`}>Create an Account</h2>
         <label className={s.marginAndPadding}>Your E-Mail Address *</label>
+        {this.state.error.email && <div className={s.error}>{this.state.error.email}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding}`}
+          className={`${s.input} ${s.marginAndPadding} ${this.state.error.email && this.state.error.email != undefined ? s.redError : ''}`}
           type="email"
           name="email"
           id="email"
@@ -178,10 +224,11 @@ class Login extends React.Component {
           onBlur={this.handleBlur}
         />
         <label className={s.marginAndPadding}>Create Password *</label>
-        <div className={`${s.passwordWithEye} ${s.marginAndPadding}`}>
+        {this.state.error.password && <div className={s.error}>{this.state.error.password}</div>}
+        <div className={`${s.passwordWithEye} ${s.marginAndPadding} ${this.state.error.password && this.state.error.password != undefined ? s.redError : ''}`}>
           <input
             id="revealPassword"
-            className={`${s.deleteBorder}`}
+            className={`${s.deleteBorder} ${this.state.error.password && this.state.error.password != undefined ? s.redTransparentError : ''}`}
             type={this.state.revealPassword}
             name="password"
             autoComplete="off"
@@ -198,8 +245,9 @@ class Login extends React.Component {
           character - ! @ # $ % ^ & * ( ) _ +
         </p>
         <label className={s.marginAndPadding}>Confirm Password *</label>
+        {this.state.error.confirmPassword && <div className={s.error}>{this.state.error.confirmPassword}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding}`}
+          className={`${s.input} ${s.marginAndPadding} ${this.state.error.confirmPassword && this.state.error.confirmPassword != undefined ? s.redError : ''}`}
           type="password"
           name="confirmPassword"
           id="confirmPassword"
@@ -209,8 +257,9 @@ class Login extends React.Component {
           onBlur={this.handleBlur}
         />
         <label className={s.marginAndPadding}>First Name *</label>
+        {this.state.error.firstName && <div className={s.error}>{this.state.error.firstName}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding}`}
+          className={`${s.input} ${s.marginAndPadding} ${this.state.error.firstName && this.state.error.firstName != undefined ? s.redError : ''}`}
           type="text"
           name="firstName"
           id="firstName"
@@ -219,8 +268,9 @@ class Login extends React.Component {
           onBlur={this.handleBlur}
         />
         <label className={s.marginAndPadding}>Last Name *</label>
+        {this.state.error.lastName && <div className={s.error}>{this.state.error.lastName}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding}`}
+          className={`${s.input} ${s.marginAndPadding} ${this.state.error.lastName && this.state.error.lastName != undefined ? s.redError : ''}`}
           type="text"
           name="lastName"
           id="lastName"
@@ -230,8 +280,9 @@ class Login extends React.Component {
           onBlur={this.handleBlur}
         />
         <label className={s.marginAndPadding}>PostCode</label>
+        {this.state.error.postCode && <div className={s.error}>{this.state.error.postCode}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding}`}
+          className={`${s.input} ${s.marginAndPadding} ${this.state.error.postCode && this.state.error.postCode != undefined ? s.redError : ''}`}
           type="number"
           name="postCode"
           id="postCode"
@@ -300,7 +351,7 @@ class Login extends React.Component {
       <div className={`container`}>
         <form onSubmit={this.handleSubmit}>
           <div className={s.formContainer}>
-            <button className={s.direction} onClick={this.backToStore}>
+            <button className={s.direction} type="reset" onClick={this.backToStore}>
               <i className={`fas fa-times`}></i>
             </button>
             <h3>New User or Returning?</h3>
