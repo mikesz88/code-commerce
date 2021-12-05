@@ -130,13 +130,13 @@ class Login extends React.Component {
   firstNameCheck = value => {
     const letterRegex = /^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/gi;
     const error = letterRegex.test(value);
-    return !error ? 'Please enter a valide First Name' : undefined;
+    return !error ? 'Please enter a valid First Name' : undefined;
   }
 
   lastNameCheck = value => {
     const letterRegex = /^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/gi;
     const error = letterRegex.test(value);
-    return !error ? 'Please enter a valide Last Name' : undefined;
+    return !error ? 'Please enter a valid Last Name' : undefined;
   }
 
   postCodeCheck = value => {
@@ -165,7 +165,7 @@ class Login extends React.Component {
   }
 
   emailCheck = value => {
-    const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/; /* this needs to fixed */
     const error = emailRegex.test(value);
     return !error ? 'This is not a proper email. Try again!' : this.emailAlreadyTaken(value);
   }
@@ -214,7 +214,7 @@ class Login extends React.Component {
         <label className={s.marginAndPadding}>Your E-Mail Address *</label>
         {this.state.error.email && <div className={s.error}>{this.state.error.email}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding} ${this.state.error.email && this.state.error.email != undefined ? s.redError : ''}`}
+          className={`${s.input} ${s.marginAndPadding} ${this.state.error.email && this.state.error.email !== undefined ? s.redError : ''}`}
           type="email"
           name="email"
           id="email"
@@ -225,10 +225,10 @@ class Login extends React.Component {
         />
         <label className={s.marginAndPadding}>Create Password *</label>
         {this.state.error.password && <div className={s.error}>{this.state.error.password}</div>}
-        <div className={`${s.passwordWithEye} ${s.marginAndPadding} ${this.state.error.password && this.state.error.password != undefined ? s.redError : ''}`}>
+        <div className={`${s.passwordWithEye} ${s.marginAndPadding} ${this.state.error.password && this.state.error.password !== undefined ? s.redError : ''}`}>
           <input
             id="revealPassword"
-            className={`${s.deleteBorder} ${this.state.error.password && this.state.error.password != undefined ? s.redTransparentError : ''}`}
+            className={`${s.deleteBorder} ${this.state.error.password && this.state.error.password !== undefined ? s.redTransparentError : ''}`}
             type={this.state.revealPassword}
             name="password"
             autoComplete="off"
@@ -247,7 +247,7 @@ class Login extends React.Component {
         <label className={s.marginAndPadding}>Confirm Password *</label>
         {this.state.error.confirmPassword && <div className={s.error}>{this.state.error.confirmPassword}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding} ${this.state.error.confirmPassword && this.state.error.confirmPassword != undefined ? s.redError : ''}`}
+          className={`${s.input} ${s.marginAndPadding} ${this.state.error.confirmPassword && this.state.error.confirmPassword !== undefined ? s.redError : ''}`}
           type="password"
           name="confirmPassword"
           id="confirmPassword"
@@ -259,7 +259,7 @@ class Login extends React.Component {
         <label className={s.marginAndPadding}>First Name *</label>
         {this.state.error.firstName && <div className={s.error}>{this.state.error.firstName}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding} ${this.state.error.firstName && this.state.error.firstName != undefined ? s.redError : ''}`}
+          className={`${s.input} ${s.marginAndPadding} ${this.state.error.firstName && this.state.error.firstName !== undefined ? s.redError : ''}`}
           type="text"
           name="firstName"
           id="firstName"
@@ -270,7 +270,7 @@ class Login extends React.Component {
         <label className={s.marginAndPadding}>Last Name *</label>
         {this.state.error.lastName && <div className={s.error}>{this.state.error.lastName}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding} ${this.state.error.lastName && this.state.error.lastName != undefined ? s.redError : ''}`}
+          className={`${s.input} ${s.marginAndPadding} ${this.state.error.lastName && this.state.error.lastName !== undefined ? s.redError : ''}`}
           type="text"
           name="lastName"
           id="lastName"
@@ -282,7 +282,7 @@ class Login extends React.Component {
         <label className={s.marginAndPadding}>PostCode</label>
         {this.state.error.postCode && <div className={s.error}>{this.state.error.postCode}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding} ${this.state.error.postCode && this.state.error.postCode != undefined ? s.redError : ''}`}
+          className={`${s.input} ${s.marginAndPadding} ${this.state.error.postCode && this.state.error.postCode !== undefined ? s.redError : ''}`}
           type="number"
           name="postCode"
           id="postCode"
