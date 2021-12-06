@@ -8,25 +8,43 @@ import AngularImg from './assets/mitchell-luo-FWoq_ldWlNQ-unsplash.jpg';
 import CustomOrderImg from './assets/pankaj-patel-_SgRNwAVNKw-unsplash.jpg';
 
 
+export const INIT_CARD = {
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    postCode: '',
+    email: '',
+    cart: undefined,
+    shipping: undefined,
+    payment: undefined,
+  }
+
 const fakeUser = {
     email: 'fake@devslopes.com',
     password: 'Devslopes0!',
     cart: undefined,
     shipping: undefined,
-    payment: undefined
+    payment: undefined,
+    firstName: '',
+    lastName: '',
+    postCode: '',
 }
 
-const michaelUser = {
-    email: 'michael@devslopes.com',
+const jasonUser = {
+    email: 'jason@devslopes.com',
     password: 'Devslopes0!',
     cart: undefined,
     shipping: undefined,
-    payment: undefined
+    payment: undefined,
+    firstName: '',
+    lastName: '',
+    postCode: '',
 }
 
 const commerceComponents = {
     storeDisplay : {
-        display: false,
+        display: true,
         items: {
             HTMLandCSSOnly: {
                 price: 99.99,
@@ -63,8 +81,7 @@ const commerceComponents = {
         }
     },
     login: {
-        display: true,
-        loggedIn: false,
+        display: false,
     },
     cart: {
         display: false
@@ -78,9 +95,10 @@ const commerceComponents = {
 };
 
 export const stateComponents = {
+    currentUser: false,
     users: {
         fakeUser,
-        michaelUser
+        jasonUser
     },
     commerceComponents,
 }

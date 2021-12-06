@@ -1,21 +1,6 @@
-/* 
-1. Work on the password issue with the exclamation
-2. On submit I need to store the user on to the Commerce State User & change component to cart
-3. Create the logic for signing in.
-4. finish the cancel function to change the display back to the store front
-*/
-
 import React from "react";
 import s from "../components/Login.module.css";
-
-const INIT_CARD = {
-  password: '',
-  confirmPassword: '',
-  firstName: '',
-  lastName: '',
-  postCode: '',
-  email: ''
-}
+import { INIT_CARD } from "./stateLogin";
 
 class Login extends React.Component {
   constructor(props) {
@@ -23,7 +8,7 @@ class Login extends React.Component {
     this.state = {
       eye: false,
       revealPassword: 'password',
-      userType: 'newUser',
+      userType: 'signIn',
       newUser: INIT_CARD,
       error: {},
     };
@@ -33,6 +18,7 @@ class Login extends React.Component {
     const { name, value } = e.target;
 
     this.setState({
+      newUser: INIT_CARD,
       [name]: value,
     });
   };
@@ -42,14 +28,27 @@ class Login extends React.Component {
     let errorValue = {};
     let isError = false;
     Object.keys(newUser).forEach(val => {
-      let checkError = val;
-      if (!newUser[val].length || error[checkError]) {
-        error[checkError] 
-        ? errorValue = { ...errorValue, [checkError]: error[checkError]}
-        : errorValue = { ...errorValue, [checkError]: 'Required'};
-        isError = true;
-
-    }
+      if (!(val !== 'cart' || val !== 'shipping' || val !== 'payment')) {
+        let checkError = val;
+        if (this.state.userType === 'signIn') {
+          if (((val === 'email' || val === 'password') && !newUser[val].length) || error[checkError]) {
+            error[checkError] 
+            ? errorValue = { ...errorValue, [checkError]: error[checkError]}
+            : errorValue = { ...errorValue, [checkError]: 'Required'};
+            isError = true;
+          }
+        } else if (this.state.userType === 'newUser') {
+          console.log(val);
+          if (!newUser[val].length || error[checkError]) {
+            error[checkError] 
+            ? errorValue = { ...errorValue, [checkError]: error[checkError]}
+            : errorValue = { ...errorValue, [checkError]: 'Required'};
+            isError = true;
+          }
+        } 
+      } else {
+        isError = false;
+      }
     });
     this.setState({ error: errorValue }, this.generalError);
     return isError;
@@ -75,18 +74,32 @@ class Login extends React.Component {
 
   }
 
+  loginSuccessful = () => {
+    this.props.updateSubState('commerceComponents', 'login', {'display': false});
+    this.props.updateSubState('commerceComponents', 'cart', {'display': true});
+  }
+
+
   handleSubmit = (e) => {
     e.preventDefault();
+    console.log(e);
     const errorCheck = this.checkErrorBeforeSave();
+    console.log(errorCheck);
     if (!errorCheck) {
+        if (this.state.userType === 'signIn') {
+          this.props.updateState('currentUser', this.state.newUser)
+        } else if (this.state.userType === 'newUser') {
+          this.props.updateState('users', {[Date.now()]: this.state.newUser});
+          this.props.updateState('currentUser', this.state.newUser)
+        }
         this.setState({
           newUser: INIT_CARD,
         }, () => {
           const divMessage = document.getElementById('generalError');
           divMessage.style.display = 'none';
-
         });
-    }  
+        this.loginSuccessful();
+    }
   };
 
   handleInputData = e => {
@@ -104,14 +117,16 @@ class Login extends React.Component {
     this.setState({
       eye: false,
       revealPassword: 'password',
-      userType: 'newUser',
       newUser: INIT_CARD,
       error: {},
     });
+
+    this.props.updateSubState('commerceComponents', 'login', {'display': false});
+    this.props.updateSubState('commerceComponents', 'storeDisplay', {'display': true});
   }
 
   eyeFlip = () => {
-    const eyeButton = document.getElementById('newUserPassword'); 
+    const eyeButton = document.getElementById('userPassword'); 
     if (!this.state.eye) {
         eyeButton.innerHTML = '<i class="fas fa-eye"></i>';
         this.setState({
@@ -151,16 +166,14 @@ class Login extends React.Component {
   : undefined;
 
   passwordValidationCheck = value => {
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,20}$/gm;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-#$^+_!*()@%&]).{8,20}$/gm;
     const error = passwordRegex.test(value);
     return !error ? 'This does not fit the requirement. Try again!' : undefined;
   }
 
   emailAlreadyTaken = value => {
     const users = Object.keys(this.props.users);
-    console.log(users);
     const alreadyTaken = users.some(user => this.props.users[user]['email'] === value);
-    // console.log(this.props.users[user]['email']);
     return alreadyTaken ? 'This email is already used. Try another one.' : undefined;
   }
 
@@ -202,9 +215,49 @@ class Login extends React.Component {
     }
   }
 
-  handleBlur = e => this.handleValidations(e.target.name, e.target.value);
+  verifyPassword = value => {
+    const users = Object.keys(this.props.users);
+    const passwordCheck = users.find(user => this.props.users[user]['password'] === value);
+    if (passwordCheck) {
+      this.setState({
+        newUser: this.props.users[passwordCheck]
+      })
+      return undefined;
+    } else {
+      return 'The password did not match. Try again';
+    }
+    // return passwordCheck ? undefined : 'There is no account with that email.';
+  }
 
+  verifyEmail = value => {
+    const users = Object.keys(this.props.users);
+    const emailConfirm = users.find(user => this.props.users[user]['email'] === value);
+    return emailConfirm ? undefined : 'There is no account with that email.';
+  }
 
+  handleValidationsReturningUser = (target, value) => {
+    let errorText;
+    switch (target) {
+      case 'email':
+        errorText = this.verifyEmail(value);
+        this.setState(prevState => ({  error: {    ...prevState.error,    email: errorText }}))
+        break;
+      case 'password':
+        errorText = this.verifyPassword(value);
+        this.setState(prevState => ({  error: {    ...prevState.error,    password: errorText }}))
+        break;
+        default:
+        break;
+    }
+  }
+
+  handleBlur = e => {
+    if (this.state.userType === 'signIn') {
+      this.handleValidationsReturningUser(e.target.name, e.target.value);
+    } else if (this.state.userType === 'newUser') {
+      this.handleValidations(e.target.name, e.target.value);
+    }
+  }
 
   newUser = () => {
     return (
@@ -236,8 +289,7 @@ class Login extends React.Component {
             onChange={this.handleInputData}
             onBlur={this.handleBlur}
           />
-          <button id="newUserPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button>
-          {/* function needed for eye flip */}
+          <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button>
         </div>
         <p className={`${s.finePrint}`}>
           Password must be 8-20 characters, including: at least one capital
@@ -318,24 +370,32 @@ class Login extends React.Component {
   returningUser = () => {
     return (
       <div className={`${s.flexContainer}`}>
+        <div id='generalError' className={`${s.error} ${s.generalError}`}>We're sorry, but one or more fields are incomplete or incorrect. <u>Find error(s)</u>.</div>
         <h2 className={`header-sm`}>Returning User</h2>
         <label className={s.marginAndPadding}>Your E-Mail Address *</label>
+        {this.state.error.email && <div className={s.error}>{this.state.error.email}</div>}
         <input
           className={`${s.input} ${s.marginAndPadding}`}
           type="email"
-          name="userName"
-          id="userName"
+          name="email"
+          id="email"
+          onChange={this.handleInputData}
+          onBlur={this.handleBlur}
         />
         <label className={s.marginAndPadding}>Create Password *</label>
+        {this.state.error.password && <div className={s.error}>{this.state.error.password}</div>}
         <div className={`${s.passwordWithEye} ${s.marginAndPadding}`}>
-          <input
-            className={`${s.deleteBorder}`}
-            type="password"
+        <input
+            id="revealPassword"
+            className={`${s.deleteBorder} ${this.state.error.password && this.state.error.password !== undefined ? s.redTransparentError : ''}`}
+            type={this.state.revealPassword}
             name="password"
-            id="password"
+            autoComplete="off"
+            value={this.state.newUser && this.state.newUser.password}
+            onChange={this.handleInputData}
+            onBlur={this.handleBlur}
           />
-          <input type="button" value={this.state.eye} onClick={this.eyeFlip} />{" "}
-          {/* function needed for eye flip */}
+          <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button>
         </div>
         <button className={`${s.input} ${s.marginAndPadding}`} type="submit">
           SIGN IN
