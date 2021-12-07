@@ -1,0 +1,5 @@
+.cartFlex {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}

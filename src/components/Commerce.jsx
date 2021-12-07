@@ -44,7 +44,7 @@ class Commerce extends React.Component {
 
     render() {
         const {storeDisplay, login, cart, shipping, payment } = this.state.commerceComponents;
-        const { users } = this.state;
+        const { users, currentUser} = this.state;
 
         return(
             <div>
@@ -55,6 +55,7 @@ class Commerce extends React.Component {
                     loginScreen={login.display}
                     codeItems={storeDisplay.items}
                     cart={cart}
+                    currentUser={currentUser}
                     updateState={this.updateState} 
                     updateSubState={this.updateSubState}
                     deleteSubState={this.deleteStateVariable}
@@ -64,7 +65,9 @@ class Commerce extends React.Component {
                     updateState={this.updateState}
                     updateSubState={this.updateSubState}
                 />}
-                {cart.display && <Cart />}
+                {cart.display && <Cart 
+                    cart={cart}
+                />}
                 {shipping.display && <Shipping />}
                 {payment.display && <Payment />}
             </div>

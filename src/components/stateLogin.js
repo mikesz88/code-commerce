@@ -44,39 +44,55 @@ const jasonUser = {
 
 const commerceComponents = {
     storeDisplay : {
-        display: true,
+        display: false,
         items: {
             HTMLandCSSOnly: {
                 price: 99.99,
-                img: HTMLandCSSImg
+                img: HTMLandCSSImg,
+                file: '50MB',
+                linesOfCode: 225
             },
             SaaS: {
                 price: 149.99,
-                img: SaaSImg
+                img: SaaSImg,
+                file: '75MB',
+                linesOfCode: 425
             },
             Responsive: {
                 price: 199.99,
-                img: ResponsiveImg
+                img: ResponsiveImg,
+                file: '100MB',
+                linesOfCode: 525
             },
             JavaScript: {
                 price: 249.99,
-                img: JavaScriptImg
+                img: JavaScriptImg,
+                file: '200MB',
+                linesOfCode: 825
             },
             Portfolio: {
                 price: 299.99,
-                img: PortfolioImg
+                img: PortfolioImg,
+                file: '1GB',
+                linesOfCode: 1000
             },
             React: {
                 price: 349.99,
-                img: ReactImg
+                img: ReactImg,
+                file: '1.25GB',
+                linesOfCode: 2500
             },
             Angular: {
                 price: 399.99,
-                img: AngularImg
+                img: AngularImg,
+                file: '1.75GB',
+                linesOfCode: 2250
             },
             CustomOrder: {
                 price: 499.99,
-                img: CustomOrderImg
+                img: CustomOrderImg,
+                file: '5GB',
+                linesOfCode: 5000
             },
         }
     },
@@ -84,7 +100,19 @@ const commerceComponents = {
         display: false,
     },
     cart: {
-        display: false
+        display: true,
+        Angular: {
+            price: 399.99,
+            img: AngularImg,
+            file: '1.75GB',
+            linesOfCode: 2250
+        },
+        CustomOrder: {
+            price: 499.99,
+            img: CustomOrderImg,
+            file: '5GB',
+            linesOfCode: 5000
+        }
     },
     shipping: {
         display: false

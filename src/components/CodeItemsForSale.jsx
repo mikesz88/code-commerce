@@ -17,7 +17,7 @@ class CodeItemsForSale extends React.Component {
     }
 
     checkLogin = (name, value) => {
-        this.props.loggedIn ? this.updateCart(name, value) : this.login();
+        this.props.currentUser ? this.updateCart(name, value) : this.login();
     }
 
     

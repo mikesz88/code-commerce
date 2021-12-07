@@ -1,0 +1,6 @@
+.cartInfoContainer {
+    flex: 1;
+    border: 1px solid black;
+    margin-right: 0.5rem;
+    border-radius: 8px;
+}
