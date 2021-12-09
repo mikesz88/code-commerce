@@ -3,4 +3,18 @@
     border: 1px solid black;
     margin-left: 0.5rem;
     border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.error {
+    color: red;
+    font-size: 0.75rem;
+}
+
+.flexCartCompute {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }

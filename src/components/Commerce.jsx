@@ -67,6 +67,10 @@ class Commerce extends React.Component {
                 />}
                 {cart.display && <Cart 
                     cart={cart}
+                    payment={payment}
+                    updateSubState={this.updateSubState}
+                    deleteSubState={this.deleteStateVariable}
+                    shipping={shipping}
                 />}
                 {shipping.display && <Shipping />}
                 {payment.display && <Payment />}

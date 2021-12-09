@@ -118,7 +118,8 @@ const commerceComponents = {
         display: false
     },
     payment: {
-        display: false
+        display: false,
+        subTotal: 0,
     }
 };
 

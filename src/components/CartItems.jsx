@@ -5,11 +5,28 @@ class CartItems extends React.Component {
     // eslint-disable-next-line no-useless-constructor
     constructor(props) {
         super(props);
-
+        this.state = {}
     }
 
+    priceAmount = (e) => {
+        this.props.updateSubState('commerceComponents', 'payment', {[e.target.name]: (e.target.value * this.props.price)});
+    }
+
+    quantityCount = e => {
+        this.setState({
+           [ e.target.name]: e.target.value
+        }, this.priceAmount(e))
+    }
+
+    deleteFromCart = () => {
+        this.props.deleteSubState('commerceComponents', 'cart', this.props.name)
+        this.props.deleteSubState('commerceComponents', 'payment', this.props.name)
+    }
+
+    moneyDenomination = amount => amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+
     render() {
-        const { name, img, price, file, linesOfCode } = this.props;
+        const { name, img, price, file, linesOfCode, payment } = this.props;
         return (
             <>
                 <hr />
@@ -41,23 +58,26 @@ class CartItems extends React.Component {
                     </div>
 
                     <div className={`other`}>
-                        <select name="quantity" id="quantity">
+                        <select name={name} id={name} onChange={this.quantityCount}>
                             <option value="1">1</option>
-                            <option value="1">2</option>
-                            <option value="1">3</option>
-                            <option value="1">4</option>
-                            <option value="1">5</option>
-                            <option value="1">6</option>
-                            <option value="1">7</option>
-                            <option value="1">8</option>
-                            <option value="1">9</option>
-                            <option value="1">10</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
                         </select>
                     </div>
 
                     <div className={`other`}>
                         {/* {Number((this.state.quantity * price).toFixed(2))} */}
-                        test -&gt; ${price * 2}
+                        {payment[name] 
+                        ? this.moneyDenomination(payment[name]) 
+                        : this.props.updateSubState('commerceComponents', 'payment', {[name]: (price)})
+}
                     </div>
                 </div>
             </>

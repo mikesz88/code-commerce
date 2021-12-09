@@ -10,7 +10,7 @@ class CartContainer extends React.Component {
 
     }
     render() {
-        const { cart } = this.props;
+        const { cart, payment, updateSubState, deleteSubState } = this.props;
         return(
             <div className={s.cartInfoContainer}>
                 {/* Cart Sequence from Cart, to Shipping, to Payment, to Confirmation Screen */}
@@ -23,6 +23,9 @@ class CartContainer extends React.Component {
                         price = {cart[name]['price']}
                         file = {cart[name]['file']}
                         linesOfCode = {cart[name]['linesOfCode']}
+                        payment={payment}
+                        updateSubState={updateSubState}
+                        deleteSubState={deleteSubState}
                     /> : null
                 ))} 
             </div>
