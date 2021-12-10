@@ -7,20 +7,26 @@ class CartItems extends React.Component {
         super(props);
         this.state = {}
     }
-
+    
     priceAmount = (e) => {
-        this.props.updateSubState('commerceComponents', 'payment', {[e.target.name]: (e.target.value * this.props.price)});
+        this.props.updateSubState('commerceComponents', 'payment', {subTotal: this.props.payment.subTotal - this.props.payment[this.props.name] + (Number(e.target.value) * this.props.price)});
+        this.props.updateSubState('commerceComponents', 'payment', {cartTotal: this.props.payment.subTotal - this.props.payment[this.props.name] + (Number(e.target.value) * this.props.price)});
+        this.props.updateSubState('commerceComponents', 'payment', {discount: 0});
+        this.props.updateSubState('commerceComponents', 'payment', {[e.target.name]: e.target.value * this.props.price});
     }
 
     quantityCount = e => {
         this.setState({
-           [ e.target.name]: e.target.value
+           [e.target.name]: Number(e.target.value)
         }, this.priceAmount(e))
     }
 
     deleteFromCart = () => {
+        this.props.updateSubState('commerceComponents', 'payment', {subTotal: this.props.payment.subTotal - this.props.payment[this.props.name]});
+        this.props.updateSubState('commerceComponents', 'payment', {cartTotal: this.props.payment.subTotal - this.props.payment[this.props.name]});
         this.props.deleteSubState('commerceComponents', 'cart', this.props.name)
         this.props.deleteSubState('commerceComponents', 'payment', this.props.name)
+        this.props.updateSubState('commerceComponents', 'payment', {discount: 0});
     }
 
     moneyDenomination = amount => amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
@@ -73,11 +79,8 @@ class CartItems extends React.Component {
                     </div>
 
                     <div className={`other`}>
-                        {/* {Number((this.state.quantity * price).toFixed(2))} */}
-                        {payment[name] 
-                        ? this.moneyDenomination(payment[name]) 
-                        : this.props.updateSubState('commerceComponents', 'payment', {[name]: (price)})
-}
+                        {/* Change this to reflect state */}
+                        {this.moneyDenomination(payment[name])} 
                     </div>
                 </div>
             </>

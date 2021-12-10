@@ -23,6 +23,7 @@ class Cart extends React.Component {
                 <CartSummary
                     payment={payment}
                     updateSubState={updateSubState}
+                    cart={cart}
                     shipping={shipping}
                 />
             </div>

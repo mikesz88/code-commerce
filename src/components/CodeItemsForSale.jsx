@@ -5,10 +5,20 @@ class CodeItemsForSale extends React.Component {
     // eslint-disable-next-line no-useless-constructor
     constructor(props) {
         super(props);
-    }
+    }    
 
     updateCart = (name, value) => {
         this.props.updateSubState('commerceComponents', 'cart', {[name]: value});
+        this.props.updateSubState('commerceComponents', 'payment', {[name]: value['price']});
+        this.props.updateSubState('commerceComponents', 'payment', {subTotal: this.props.payment.subTotal + value['price']});
+        this.props.updateSubState('commerceComponents', 'payment', {cartTotal: this.props.payment.cartTotal + value['price']});
+    }
+
+    deleteItem = (name, value) => {
+        this.props.deleteSubState('commerceComponents', 'cart', name)
+        this.props.deleteSubState('commerceComponents', 'payment', name)
+        this.props.updateSubState('commerceComponents', 'payment', {subTotal: this.props.payment.subTotal - value['price']});
+        this.props.updateSubState('commerceComponents', 'payment', {cartTotal: this.props.payment.cartTotal - value['price']});
     }
 
     login = () => {
@@ -36,8 +46,8 @@ class CodeItemsForSale extends React.Component {
                         <img src={codeItems[code]['img']} alt="" />
                         <p className={`caption`}>${codeItems[code]['price']}</p>
                         {!Object.keys(this.props.cart).includes(code)
-                        ? <button onClick={() => this.checkLogin(code, codeItems[code]['price'])}>Add to Cart</button>
-                        : <button onClick={() => this.props.deleteSubState('commerceComponents', 'cart', code)}>Remove from Cart</button>}
+                        ? <button onClick={() => this.checkLogin(code, codeItems[code])}>Add to Cart</button>
+                        : <button onClick={() => this.deleteItem(code, codeItems[code])}>Remove from Cart</button>}
                     </div>
                 ))}
                 </div>

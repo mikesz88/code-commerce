@@ -44,7 +44,7 @@ const jasonUser = {
 
 const commerceComponents = {
     storeDisplay : {
-        display: false,
+        display: true,
         items: {
             HTMLandCSSOnly: {
                 price: 99.99,
@@ -100,19 +100,7 @@ const commerceComponents = {
         display: false,
     },
     cart: {
-        display: true,
-        Angular: {
-            price: 399.99,
-            img: AngularImg,
-            file: '1.75GB',
-            linesOfCode: 2250
-        },
-        CustomOrder: {
-            price: 499.99,
-            img: CustomOrderImg,
-            file: '5GB',
-            linesOfCode: 5000
-        }
+        display: false,
     },
     shipping: {
         display: false
@@ -120,11 +108,14 @@ const commerceComponents = {
     payment: {
         display: false,
         subTotal: 0,
+        shippingTotal: 0,
+        discount: 0,
+        cartTotal: 0,
     }
 };
 
 export const stateComponents = {
-    currentUser: false,
+    currentUser: true,
     users: {
         fakeUser,
         jasonUser

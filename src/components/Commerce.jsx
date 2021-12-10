@@ -55,6 +55,7 @@ class Commerce extends React.Component {
                     loginScreen={login.display}
                     codeItems={storeDisplay.items}
                     cart={cart}
+                    payment={payment}
                     currentUser={currentUser}
                     updateState={this.updateState} 
                     updateSubState={this.updateSubState}
