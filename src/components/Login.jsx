@@ -11,8 +11,17 @@ class Login extends React.Component {
       userType: 'signIn',
       newUser: INIT_CARD,
       error: {},
+      generalError: false
     };
   }
+
+  updateLogin = (state, func) => this.props.updateLogin(state, func);
+  updateCart = (state, func) => this.props.updateCart(state, func);
+  updateCurrentUser = (state, func) => this.props.updateCurrentUser(state, func);
+  updateUserList = (state, func) => this.props.updateUserList(state, func);
+  updateStoreDisplay= (state, func) => this.props.updateStoreDisplay(state, func);
+
+
 
   handleRadioButton = (e) => {
     const { name, value } = e.target;
@@ -23,80 +32,74 @@ class Login extends React.Component {
     });
   };
 
+  generalError = () => {
+    const errorObject = this.state.error;
+    const errors = Object.keys(errorObject);
+    this.setState({ generalError: false })
+
+    if (!errors.length) { this.setState({ generalError: true }) };
+
+    if (errors.length) {
+      errors.forEach(errorKey => {
+        if (errorObject[errorKey] !== undefined) { this.setState({ generalError: true }) };
+      });
+    };
+  }
+
   checkErrorBeforeSave = () => {
     const { newUser, error } = this.state;
     let errorValue = {};
     let isError = false;
     Object.keys(newUser).forEach(val => {
-      if (!(val !== 'cart' || val !== 'shipping' || val !== 'payment')) {
-        let checkError = val;
+      let checkError = val;
+      if (checkError !== 'cart' 
+      && checkError !== 'shipping' 
+      && checkError !== 'payment') {
         if (this.state.userType === 'signIn') {
-          if (((val === 'email' || val === 'password') && !newUser[val].length) || error[checkError]) {
+          if (((checkError === 'email' 
+          || checkError === 'password') 
+          && !newUser[checkError].length) 
+          || error[checkError]) {
             error[checkError] 
             ? errorValue = { ...errorValue, [checkError]: error[checkError]}
             : errorValue = { ...errorValue, [checkError]: 'Required'};
             isError = true;
           }
         } else if (this.state.userType === 'newUser') {
-          console.log(val);
-          if (!newUser[val].length || error[checkError]) {
+          if (!newUser[checkError].length || error[checkError]) {
             error[checkError] 
             ? errorValue = { ...errorValue, [checkError]: error[checkError]}
             : errorValue = { ...errorValue, [checkError]: 'Required'};
             isError = true;
           }
         } 
-      } else {
-        isError = false;
       }
     });
     this.setState({ error: errorValue }, this.generalError);
     return isError;
   }
 
-  generalError = () => {
-    const errorObject = this.state.error;
-    const errors = Object.keys(errorObject);
-    const divMessage = document.getElementById('generalError');
-    divMessage.style.display = 'none';
-
-    if (!errors.length) {
-      divMessage.style.display = 'block';
-    }
-
-    if (errors.length) {
-      errors.forEach(errorKey => {
-        if (errorObject[errorKey] !== undefined) {
-          divMessage.style.display = 'block';
-        }
-      })
-    }
-
-  }
-
   loginSuccessful = () => {
-    this.props.updateSubState('commerceComponents', 'login', {'display': false});
-    this.props.updateSubState('commerceComponents', 'cart', {'display': true});
+    this.updateLogin({display: false});
+    this.updateCart({display: true});
   }
-
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
     const errorCheck = this.checkErrorBeforeSave();
-    console.log(errorCheck);
     if (!errorCheck) {
         if (this.state.userType === 'signIn') {
-          this.props.updateState('currentUser', this.state.newUser)
+          this.updateCurrentUser(this.state.newUser)
         } else if (this.state.userType === 'newUser') {
-          this.props.updateState('users', {[Date.now()]: this.state.newUser});
-          this.props.updateState('currentUser', this.state.newUser)
+          this.updateUserList({[Date.now()]: this.state.newUser})
+          this.updateCurrentUser(this.state.newUser)
         }
         this.setState({
           newUser: INIT_CARD,
         }, () => {
-          const divMessage = document.getElementById('generalError');
-          divMessage.style.display = 'none';
+          this.setState({
+            generalError: false
+          })
         });
         this.loginSuccessful();
     }
@@ -112,32 +115,29 @@ class Login extends React.Component {
   }
 
   backToStore = () => {
-    const divMessage = document.getElementById('generalError');
-    divMessage.style.display = 'none';
+
     this.setState({
       eye: false,
       revealPassword: 'password',
       newUser: INIT_CARD,
       error: {},
+      generalError: false
     });
 
-    this.props.updateSubState('commerceComponents', 'login', {'display': false});
-    this.props.updateSubState('commerceComponents', 'storeDisplay', {'display': true});
+    this.updateLogin({display: false});
+    this.updateStoreDisplay({display: true});
   }
 
-  eyeFlip = () => {
-    const eyeButton = document.getElementById('userPassword'); 
+  eyeFlip = () => { 
     if (!this.state.eye) {
-        eyeButton.innerHTML = '<i class="fas fa-eye"></i>';
         this.setState({
           eye: true,
-          revealPassword: 'text'
+          revealPassword: 'text',
         });
       } else {
-        eyeButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
         this.setState({
           eye: false,
-          revealPassword: 'password'
+          revealPassword: 'password',
         });
       }
   }
@@ -178,7 +178,7 @@ class Login extends React.Component {
   }
 
   emailCheck = value => {
-    const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/; /* this needs to fixed */
+    const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/; 
     const error = emailRegex.test(value);
     return !error ? 'This is not a proper email. Try again!' : this.emailAlreadyTaken(value);
   }
@@ -188,27 +188,27 @@ class Login extends React.Component {
     switch (target) {
       case 'email':
         errorText = this.emailCheck(value);
-        this.setState(prevState => ({  error: {    ...prevState.error,    email: errorText }}))
+        this.setState(prevState => ({  error: { ...prevState.error, email: errorText }}))
         break;
       case 'password':
         errorText = this.passwordValidationCheck(value);
-        this.setState(prevState => ({  error: {    ...prevState.error,    password: errorText }}))
+        this.setState(prevState => ({  error: { ...prevState.error, password: errorText }}))
         break;
       case 'confirmPassword':
         errorText = this.passwordMatchCheck(value);
-        this.setState(prevState => ({  error: {    ...prevState.error,    confirmPassword: errorText }}))
+        this.setState(prevState => ({  error: { ...prevState.error, confirmPassword: errorText }}))
         break;    
       case 'firstName':
         errorText = this.firstNameCheck(value);
-        this.setState(prevState => ({  error: {    ...prevState.error,    firstName: errorText }}))
+        this.setState(prevState => ({  error: { ...prevState.error, firstName: errorText }}))
         break;      
       case 'lastName':
         errorText = this.lastNameCheck(value);
-        this.setState(prevState => ({  error: {    ...prevState.error,    lastName: errorText }}))
+        this.setState(prevState => ({  error: { ...prevState.error, lastName: errorText }}))
         break;
       case 'postCode':
         errorText = this.postCodeCheck(value);
-        this.setState(prevState => ({  error: {    ...prevState.error,    postCode: errorText }}))
+        this.setState(prevState => ({  error: { ...prevState.error, postCode: errorText }}))
         break;
       default:
         break;
@@ -226,7 +226,6 @@ class Login extends React.Component {
     } else {
       return 'The password did not match. Try again';
     }
-    // return passwordCheck ? undefined : 'There is no account with that email.';
   }
 
   verifyEmail = value => {
@@ -240,11 +239,11 @@ class Login extends React.Component {
     switch (target) {
       case 'email':
         errorText = this.verifyEmail(value);
-        this.setState(prevState => ({  error: {    ...prevState.error,    email: errorText }}))
+        this.setState(prevState => ({  error: { ...prevState.error, email: errorText }}))
         break;
       case 'password':
         errorText = this.verifyPassword(value);
-        this.setState(prevState => ({  error: {    ...prevState.error,    password: errorText }}))
+        this.setState(prevState => ({  error: { ...prevState.error, password: errorText }}))
         break;
         default:
         break;
@@ -252,17 +251,17 @@ class Login extends React.Component {
   }
 
   handleBlur = e => {
-    if (this.state.userType === 'signIn') {
-      this.handleValidationsReturningUser(e.target.name, e.target.value);
-    } else if (this.state.userType === 'newUser') {
-      this.handleValidations(e.target.name, e.target.value);
-    }
+    const { name , value } = e.target;
+    const userType = this.state.userType;
+    userType === 'signIn' 
+    ? this.handleValidationsReturningUser(name, value) 
+    : this.handleValidations(name, value);
   }
 
   newUser = () => {
     return (
       <div className={`${s.flexContainer}`}>
-        <div id='generalError' className={`${s.error} ${s.generalError}`}>We're sorry, but one or more fields are incomplete or incorrect. <u>Find error(s)</u>.</div>
+        {this.state.generalError ? <div id='generalError' className={`${s.error} ${s.generalError}`}>We're sorry, but one or more fields are incomplete or incorrect. <u>Find error(s)</u>.</div> : null}
         <h2 className={`header-sm`}>Create an Account</h2>
         <label className={s.marginAndPadding}>Your E-Mail Address *</label>
         {this.state.error.email && <div className={s.error}>{this.state.error.email}</div>}
@@ -289,7 +288,9 @@ class Login extends React.Component {
             onChange={this.handleInputData}
             onBlur={this.handleBlur}
           />
-          <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button>
+          {this.state.eye 
+          ? <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button> 
+          : <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye"></i></button>}
         </div>
         <p className={`${s.finePrint}`}>
           Password must be 8-20 characters, including: at least one capital
@@ -370,7 +371,7 @@ class Login extends React.Component {
   returningUser = () => {
     return (
       <div className={`${s.flexContainer}`}>
-        <div id='generalError' className={`${s.error} ${s.generalError}`}>We're sorry, but one or more fields are incomplete or incorrect. <u>Find error(s)</u>.</div>
+        {this.state.generalError ? <div id='generalError' className={`${s.error} ${s.generalError}`}>We're sorry, but one or more fields are incomplete or incorrect. <u>Find error(s)</u>.</div> : null}
         <h2 className={`header-sm`}>Returning User</h2>
         <label className={s.marginAndPadding}>Your E-Mail Address *</label>
         {this.state.error.email && <div className={s.error}>{this.state.error.email}</div>}
@@ -395,8 +396,9 @@ class Login extends React.Component {
             onChange={this.handleInputData}
             onBlur={this.handleBlur}
           />
-          <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button>
-        </div>
+          {this.state.eye 
+          ? <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye"></i></button> 
+          : <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button>}        </div>
         <button className={`${s.input} ${s.marginAndPadding}`} type="submit">
           SIGN IN
         </button>
@@ -407,6 +409,11 @@ class Login extends React.Component {
   loginType = () => (this.state.userType === "newUser" ? true : false);
 
   render() {
+    const inputData = [
+      {type: 'radio', name: 'userType', value: 'signIn', id: 'signIn', onChange: this.handleRadioButton, text: 'Sign In'},
+      {type: 'radio', name: 'userType', value: 'newUser', id: 'newUser', onChange: this.handleRadioButton, text: 'Create Account'}
+    ];
+
     return (
       <div className={`container`}>
         <form onSubmit={this.handleSubmit}>
@@ -416,22 +423,18 @@ class Login extends React.Component {
             </button>
             <h3>New User or Returning?</h3>
             <div>
-              <input
-                type="radio"
-                name="userType"
-                value="signIn"
-                id="signIn"
-                onChange={this.handleRadioButton}
-              />
-              Sign In
-              <input
-                type="radio"
-                name="userType"
-                value="newUser"
-                id="newUser"
-                onChange={this.handleRadioButton}
-              />
-              Create Account
+              {inputData.length ? inputData.map(item => (
+                <>
+                  <input
+                  type={item.type}
+                  name={item.name}
+                  value={item.value}
+                  id={item.id}
+                  onChange={item.onChange}
+                  /> 
+                  <label for={item.name}>{item.text}</label>
+                </>
+              )) : null}
             </div>
           </div>
           {this.loginType() ? this.newUser() : this.returningUser()}

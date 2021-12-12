@@ -42,6 +42,18 @@ class Commerce extends React.Component {
         });
       };
 
+      updateLogin = (state, func) => this.updateSubState('commerceComponents', 'login', state, func);
+      updateCart = (state, func) => this.updateSubState('commerceComponents', 'cart', state, func);
+      updatePayment = (state, func) => this.updateSubState('commerceComponents', 'payment', state, func);
+      updateShipping = (state, func) => this.updateSubState('commerceComponents', 'shipping', state, func);
+      updateStoreDisplay = (state, func) => this.updateSubState('commerceComponents', 'storeDisplay', state, func);
+      updateCurrentUser = (state, func) => this.updateState('currentUser', state, func);
+      updateUserList = (state, func) => this.updateState('users', state, func);
+      deleteCartItem = name => this.deleteStateVariable('commerceComponents', 'cart', name);
+      deletePaymentItem = name => this.deleteStateVariable('commerceComponents', 'payment', name);
+
+
+
     render() {
         const {storeDisplay, login, cart, shipping, payment } = this.state.commerceComponents;
         const { users, currentUser} = this.state;
@@ -51,30 +63,39 @@ class Commerce extends React.Component {
                 <Header />
                 {storeDisplay.display 
                 && <CodeItemsForSale
-                    loggedIn={login.loggedIn}
-                    loginScreen={login.display}
                     codeItems={storeDisplay.items}
                     cart={cart}
                     payment={payment}
                     currentUser={currentUser}
-                    updateState={this.updateState} 
-                    updateSubState={this.updateSubState}
-                    deleteSubState={this.deleteStateVariable}
+                    updateLogin={this.updateLogin}
+                    updateCart={this.updateCart}
+                    updatePayment={this.updatePayment}
+                    updateStoreDisplay={this.updateStoreDisplay}
+                    updateCurrentUser={this.updateCurrentUser}
+                    deleteCartItem={this.deleteCartItem}
+                    deletePaymentItem={this.deletePaymentItem}
                 />}
                 {login.display && <Login 
                     users={users}
-                    updateState={this.updateState}
-                    updateSubState={this.updateSubState}
+                    updateLogin={this.updateLogin}
+                    updateCart={this.updateCart}
+                    updateCurrentUser={this.updateCurrentUser}
+                    updateUserList={this.updateUserList}
+                    updateStoreDisplay={this.updateStoreDisplay}
                 />}
                 {cart.display && <Cart 
                     cart={cart}
                     payment={payment}
-                    updateSubState={this.updateSubState}
-                    deleteSubState={this.deleteStateVariable}
                     shipping={shipping}
+                    updateCart={this.updateCart}
+                    updatePayment={this.updatePayment}
+                    updateShipping={this.updateShipping}
+                    deleteCartItem={this.deleteCartItem}
+                    deletePaymentItem={this.deletePaymentItem}
                 />}
                 {shipping.display && <Shipping />}
                 {payment.display && <Payment />}
+                {/* Confirmation Screen Needed or ternary with payment? */}
             </div>
         )
     }

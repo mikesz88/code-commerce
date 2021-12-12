@@ -7,13 +7,20 @@ class CartContainer extends React.Component {
     // eslint-disable-next-line no-useless-constructor
     constructor(props) {
         super(props);
-
     }
+
+
     render() {
-        const { cart, payment, updateSubState, deleteSubState } = this.props;
+        const { 
+            cart, 
+            payment, 
+            updateCart, 
+            updatePayment, 
+            deleteCartItem, 
+            deletePaymentItem 
+        } = this.props;
         return(
             <div className={s.cartInfoContainer}>
-                {/* Cart Sequence from Cart, to Shipping, to Payment, to Confirmation Screen */}
                 <CartHeader />
                 {Object.keys(cart).map(name => (
                     name !== 'display' ?
@@ -24,8 +31,10 @@ class CartContainer extends React.Component {
                         file = {cart[name]['file']}
                         linesOfCode = {cart[name]['linesOfCode']}
                         payment={payment}
-                        updateSubState={updateSubState}
-                        deleteSubState={deleteSubState}
+                        updateCart={updateCart}
+                        updatePayment={updatePayment}
+                        deleteCartItem={deleteCartItem}
+                        deletePaymentItem={deletePaymentItem}
                     /> : null
                 ))} 
             </div>

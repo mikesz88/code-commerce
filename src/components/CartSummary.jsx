@@ -1,6 +1,6 @@
 /* 
-2. update Checkout button (do not forget when zero it must be disabled.) and move it to the shipping screen.
-3. Update Cart Total (do not forget it will include shipping) 
+1. Update store display to show checkOut button as long as current user is true.
+2. start working on shipping screen
 */
 
 import React from 'react';
@@ -22,20 +22,23 @@ class CartSummary extends React.Component {
         }
     }
 
-    handleChange = e => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
+    updateCart = (state, func) => this.props.updateCart(state, func);
+    updatePayment = (state, func) => this.props.updatePayment(state, func);
+    updateShipping = (state, func) => this.props.updateShipping(state,func)
+
+
+    handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
     updateCartTotal = (name) => {
         // console.log(this.props.payment.cartTotal, this.props.payment.discount);
-        this.props.updateSubState('commerceComponents', 'payment', {cartTotal: this.props.payment.cartTotal - (this.discountNames[name]*this.props.payment.subTotal)})
+        const { cartTotal, subTotal } = this.props.payment;
+        this.updatePayment({cartTotal: cartTotal - (this.discountNames[name]*subTotal)})
     }
 
     updateDiscountAndCartTotal = name => {
         // console.log(this.discountNames[name]);
-        this.props.updateSubState('commerceComponents', 'payment', {discount: this.discountNames[name]*this.props.payment.subTotal}, this.updateCartTotal(name))
+        const {subTotal} = this.props.payment;
+        this.updatePayment({discount: this.discountNames[name]*subTotal}, this.updateCartTotal(name))
         this.setState({
             discountDisabled: true,
             error: undefined
@@ -53,25 +56,21 @@ class CartSummary extends React.Component {
 
     moneyDenomination = amount => amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
 
-    matchCarts = () => {
-        this.props.updateSubState('commerceComponents', 'payment', {cartTotal: this.props.payment.subTotal})
-    }
+    matchCarts = () => this.updatePayment({cartTotal: this.props.payment.subTotal});
 
     resetCoupon = () => {
         this.setState({
             discountDisabled: false,
             coupon: '',
             error: undefined
-        },this.props.updateSubState('commerceComponents', 'payment', {discount: 0}, this.matchCarts()))
+        },this.updatePayment({discount: 0}, this.matchCarts()))
     }
 
-    checkOutButton = () => {
-        return Object.keys(this.props.cart).filter(item => item !== 'display').length ? false : true
-    }
+    checkOutButton = () => Object.keys(this.props.cart).filter(item => item !== 'display').length ? false : true;
 
     checkout = () => {
-        this.props.updateSubState('commerceComponents', 'cart', {display: false})
-        this.props.updateSubState('commerceComponents', 'shipping', {display: true})
+        this.updateCart({display: false})
+        this.updateShipping({display: true})
 
     }
     

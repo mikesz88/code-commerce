@@ -11,20 +11,33 @@ class Cart extends React.Component {
 
     }
     render() {
-        const { cart, payment, updateSubState, deleteSubState, shipping } = this.props;
+        const { 
+            cart, 
+            payment, 
+            shipping, 
+            updateCart, 
+            updatePayment,
+            updateShipping, 
+            deleteCartItem, 
+            deletePaymentItem, 
+        } = this.props;
         return(
             <div className={`container ${s.cartFlex}`}>
                 <CartContainer 
                     cart={cart} 
                     payment={payment}
-                    updateSubState={updateSubState}
-                    deleteSubState={deleteSubState}
+                    updateCart={updateCart}
+                    updatePayment={updatePayment}
+                    deleteCartItem={deleteCartItem}
+                    deletePaymentItem={deletePaymentItem}
                 />
                 <CartSummary
                     payment={payment}
-                    updateSubState={updateSubState}
                     cart={cart}
                     shipping={shipping}
+                    updatePayment={updatePayment}
+                    updateCart={updateCart}
+                    updateShipping={updateShipping}
                 />
             </div>
         )

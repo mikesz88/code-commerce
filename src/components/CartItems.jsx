@@ -7,12 +7,20 @@ class CartItems extends React.Component {
         super(props);
         this.state = {}
     }
+
+    updateCart = (state, func) => this.props.updateCart(state, func);
+    updatePayment = (state, func) => this.props.updatePayment(state, func);
+    deleteCartItem = name => this.props.deleteCartItem(name);
+    deletePaymentItem = name => this.props.deletePaymentItem(name);
+
     
     priceAmount = (e) => {
-        this.props.updateSubState('commerceComponents', 'payment', {subTotal: this.props.payment.subTotal - this.props.payment[this.props.name] + (Number(e.target.value) * this.props.price)});
-        this.props.updateSubState('commerceComponents', 'payment', {cartTotal: this.props.payment.subTotal - this.props.payment[this.props.name] + (Number(e.target.value) * this.props.price)});
-        this.props.updateSubState('commerceComponents', 'payment', {discount: 0});
-        this.props.updateSubState('commerceComponents', 'payment', {[e.target.name]: e.target.value * this.props.price});
+        const { price, name, payment } = this.props;
+        const { subTotal } = payment;
+        this.updatePayment({subTotal: subTotal - payment[name] + (Number(e.target.value) * price)});
+        this.updatePayment({cartTotal: subTotal - payment[name] + (Number(e.target.value) * price)});
+        this.updatePayment({discount: 0});
+        this.updatePayment({[e.target.name]: e.target.value * price});
     }
 
     quantityCount = e => {
@@ -22,17 +30,26 @@ class CartItems extends React.Component {
     }
 
     deleteFromCart = () => {
-        this.props.updateSubState('commerceComponents', 'payment', {subTotal: this.props.payment.subTotal - this.props.payment[this.props.name]});
-        this.props.updateSubState('commerceComponents', 'payment', {cartTotal: this.props.payment.subTotal - this.props.payment[this.props.name]});
-        this.props.deleteSubState('commerceComponents', 'cart', this.props.name)
-        this.props.deleteSubState('commerceComponents', 'payment', this.props.name)
-        this.props.updateSubState('commerceComponents', 'payment', {discount: 0});
+        const { name, payment } = this.props;
+        const { subTotal } = payment;
+        this.updatePayment({subTotal: subTotal - payment[name]});
+        this.updatePayment({cartTotal: subTotal - payment[name]});
+        this.deleteCartItem(name)
+        this.deletePaymentItem(name)
+        this.updatePayment({discount: 0});
     }
 
     moneyDenomination = amount => amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
 
     render() {
-        const { name, img, price, file, linesOfCode, payment } = this.props;
+        const { 
+            name, 
+            img,
+            price, 
+            file, 
+            linesOfCode, 
+            payment 
+        } = this.props;
         return (
             <>
                 <hr />
@@ -79,7 +96,6 @@ class CartItems extends React.Component {
                     </div>
 
                     <div className={`other`}>
-                        {/* Change this to reflect state */}
                         {this.moneyDenomination(payment[name])} 
                     </div>
                 </div>
