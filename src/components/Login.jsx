@@ -1,3 +1,8 @@
+/* 
+1. Resetting state variables when switching between sign in and create account
+2. Move error messages to below input fields
+3. Checked radio start value react function (or leave it blank) */
+
 import React from "react";
 import s from "../components/Login.module.css";
 import { INIT_CARD } from "./stateLogin";
@@ -20,8 +25,6 @@ class Login extends React.Component {
   updateCurrentUser = (state, func) => this.props.updateCurrentUser(state, func);
   updateUserList = (state, func) => this.props.updateUserList(state, func);
   updateStoreDisplay= (state, func) => this.props.updateStoreDisplay(state, func);
-
-
 
   handleRadioButton = (e) => {
     const { name, value } = e.target;
@@ -87,12 +90,13 @@ class Login extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const errorCheck = this.checkErrorBeforeSave();
+    const { newUser, userType } = this.state;
     if (!errorCheck) {
-        if (this.state.userType === 'signIn') {
-          this.updateCurrentUser(this.state.newUser)
-        } else if (this.state.userType === 'newUser') {
-          this.updateUserList({[Date.now()]: this.state.newUser})
-          this.updateCurrentUser(this.state.newUser)
+        if (userType === 'signIn') {
+          this.updateCurrentUser(newUser)
+        } else if (userType === 'newUser') {
+          this.updateUserList({[Date.now()]: newUser})
+          this.updateCurrentUser(newUser)
         }
         this.setState({
           newUser: INIT_CARD,
@@ -106,16 +110,16 @@ class Login extends React.Component {
   };
 
   handleInputData = e => {
+    const { name, value } = e.target;
     this.setState(prevState => ({
       newUser: {
         ...prevState.newUser,
-        [e.target.name]: e.target.value
+        [name]: value
       }
     }))
   }
 
   backToStore = () => {
-
     this.setState({
       eye: false,
       revealPassword: 'password',
@@ -258,37 +262,65 @@ class Login extends React.Component {
     : this.handleValidations(name, value);
   }
 
+  
   newUser = () => {
+    const { generalError, error, newUser, eye, revealPassword} = this.state;
+
+    const emailInputData = {
+      className: `${s.input} ${s.marginAndPadding} ${error.email && error.email !== undefined ? s.redError : ''}`,
+      type: 'email', name: 'email', id: 'email', autoComplete: 'off', value: newUser && newUser.email, 
+      onChange: this.handleInputData,
+      onBlur: this.handleBlur
+    }
+    const passwordInputData = {
+      className: `${s.deleteBorder} ${error.password && error.password !== undefined ? s.redTransparentError : ''}`,
+      type: revealPassword, name: 'password', id: 'revealPassword', autoComplete: 'off', value: newUser && newUser.password, 
+      onChange: this.handleInputData,
+      onBlur: this.handleBlur
+    }
+    const confirmPasswordInputData = {
+      className: `${s.input} ${s.marginAndPadding} ${error.confirmPassword && error.confirmPassword !== undefined ? s.redError : ''}`,
+      type: 'password', name: 'confirmPassword', id: 'confirmPassword', autoComplete: 'off', value: newUser && newUser.confirmPassword, 
+      onChange: this.handleInputData,
+      onBlur: this.handleBlur
+    }
+    const firstNameInputData = {
+      className: `${s.input} ${s.marginAndPadding} ${error.firstName && error.firstName !== undefined ? s.redError : ''}`,
+      type: 'text', name: 'firstName', id: 'firstName', autoComplete: 'off', value: newUser && newUser.firstName, 
+      onChange: this.handleInputData,
+      onBlur: this.handleBlur
+    }
+    const lastNameInputData = {
+      className: `${s.input} ${s.marginAndPadding} ${error.lastName && error.lastName !== undefined ? s.redError : ''}`,
+      type: 'text', name: 'lastName', id: 'lastName', autoComplete: 'off', value: newUser && newUser.lastName, 
+      onChange: this.handleInputData,
+      onBlur: this.handleBlur
+    }
+    const postCodeInputData = {
+      className: `${s.input} ${s.marginAndPadding} ${error.postCode && error.postCode !== undefined ? s.redError : ''}`,
+      type: 'number', name: 'postCode', id: 'postCode', autoComplete: 'off', value: newUser && newUser.postCode, 
+      onChange: this.handleInputData,
+      onBlur: this.handleBlur
+    }
+
     return (
       <div className={`${s.flexContainer}`}>
-        {this.state.generalError ? <div id='generalError' className={`${s.error} ${s.generalError}`}>We're sorry, but one or more fields are incomplete or incorrect. <u>Find error(s)</u>.</div> : null}
+        {generalError 
+        ? <div id='generalError' className={`${s.error} ${s.generalError}`}>We're sorry, but one or more fields are incomplete or incorrect. <u>Find error(s)</u>.</div> 
+        : null}
         <h2 className={`header-sm`}>Create an Account</h2>
         <label className={s.marginAndPadding}>Your E-Mail Address *</label>
-        {this.state.error.email && <div className={s.error}>{this.state.error.email}</div>}
+        {error.email && <div className={s.error}>{error.email}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding} ${this.state.error.email && this.state.error.email !== undefined ? s.redError : ''}`}
-          type="email"
-          name="email"
-          id="email"
-          autoComplete="off"
-          value={this.state.newUser && this.state.newUser.email}
-          onChange={this.handleInputData}
-          onBlur={this.handleBlur}
+          {...emailInputData}
         />
         <label className={s.marginAndPadding}>Create Password *</label>
-        {this.state.error.password && <div className={s.error}>{this.state.error.password}</div>}
-        <div className={`${s.passwordWithEye} ${s.marginAndPadding} ${this.state.error.password && this.state.error.password !== undefined ? s.redError : ''}`}>
+        {error.password && <div className={s.error}>{error.password}</div>}
+        <div className={`${s.passwordWithEye} ${s.marginAndPadding} ${error.password && error.password !== undefined ? s.redError : ''}`}>
           <input
-            id="revealPassword"
-            className={`${s.deleteBorder} ${this.state.error.password && this.state.error.password !== undefined ? s.redTransparentError : ''}`}
-            type={this.state.revealPassword}
-            name="password"
-            autoComplete="off"
-            value={this.state.newUser && this.state.newUser.password}
-            onChange={this.handleInputData}
-            onBlur={this.handleBlur}
+            {...passwordInputData}
           />
-          {this.state.eye 
+          {eye 
           ? <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button> 
           : <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye"></i></button>}
         </div>
@@ -298,51 +330,24 @@ class Login extends React.Component {
           character - ! @ # $ % ^ & * ( ) _ +
         </p>
         <label className={s.marginAndPadding}>Confirm Password *</label>
-        {this.state.error.confirmPassword && <div className={s.error}>{this.state.error.confirmPassword}</div>}
+        {error.confirmPassword && <div className={s.error}>{error.confirmPassword}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding} ${this.state.error.confirmPassword && this.state.error.confirmPassword !== undefined ? s.redError : ''}`}
-          type="password"
-          name="confirmPassword"
-          id="confirmPassword"
-          autoComplete="off"
-          value={this.state.newUser && this.state.newUser.confirmPassword}
-          onChange={this.handleInputData}
-          onBlur={this.handleBlur}
+          {...confirmPasswordInputData}
         />
         <label className={s.marginAndPadding}>First Name *</label>
-        {this.state.error.firstName && <div className={s.error}>{this.state.error.firstName}</div>}
+        {error.firstName && <div className={s.error}>{error.firstName}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding} ${this.state.error.firstName && this.state.error.firstName !== undefined ? s.redError : ''}`}
-          type="text"
-          name="firstName"
-          id="firstName"
-          value={this.state.newUser && this.state.newUser.firstName}
-          onChange={this.handleInputData}
-          onBlur={this.handleBlur}
+          {...firstNameInputData}
         />
         <label className={s.marginAndPadding}>Last Name *</label>
-        {this.state.error.lastName && <div className={s.error}>{this.state.error.lastName}</div>}
+        {error.lastName && <div className={s.error}>{error.lastName}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding} ${this.state.error.lastName && this.state.error.lastName !== undefined ? s.redError : ''}`}
-          type="text"
-          name="lastName"
-          id="lastName"
-          autoComplete="off"
-          value={this.state.newUser && this.state.newUser.lastName}
-          onChange={this.handleInputData}
-          onBlur={this.handleBlur}
+          {...lastNameInputData}
         />
         <label className={s.marginAndPadding}>PostCode</label>
-        {this.state.error.postCode && <div className={s.error}>{this.state.error.postCode}</div>}
+        {error.postCode && <div className={s.error}>{error.postCode}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding} ${this.state.error.postCode && this.state.error.postCode !== undefined ? s.redError : ''}`}
-          type="number"
-          name="postCode"
-          id="postCode"
-          autoComplete="off"
-          value={this.state.newUser && this.state.newUser.postCode}
-          onChange={this.handleInputData}
-          onBlur={this.handleBlur}
+          {...postCodeInputData}
         />
         <button className={`${s.input} ${s.marginAndPadding}`} type="submit">
           SAVE
@@ -369,34 +374,36 @@ class Login extends React.Component {
   };
 
   returningUser = () => {
+    const { error, generalError, revealPassword, newUser, eye } = this.state;
+    const emailInputData = {
+      className: `${s.input} ${s.marginAndPadding} ${error.email && error.email !== undefined ? s.redError : ''}`,
+      type: 'email', name: 'email', id: 'email', autoComplete: 'off', value: newUser && newUser.email, 
+      onChange: this.handleInputData,
+      onBlur: this.handleBlur
+    }
+    const passwordInputData = {
+      className: `${s.deleteBorder} ${error.password && error.password !== undefined ? s.redTransparentError : ''}`,
+      type: revealPassword, name: 'password', id: 'revealPassword', autoComplete: 'off', value: newUser && newUser.password, 
+      onChange: this.handleInputData,
+      onBlur: this.handleBlur
+    }
+
     return (
       <div className={`${s.flexContainer}`}>
-        {this.state.generalError ? <div id='generalError' className={`${s.error} ${s.generalError}`}>We're sorry, but one or more fields are incomplete or incorrect. <u>Find error(s)</u>.</div> : null}
+        {generalError ? <div id='generalError' className={`${s.error} ${s.generalError}`}>We're sorry, but one or more fields are incomplete or incorrect. <u>Find error(s)</u>.</div> : null}
         <h2 className={`header-sm`}>Returning User</h2>
         <label className={s.marginAndPadding}>Your E-Mail Address *</label>
-        {this.state.error.email && <div className={s.error}>{this.state.error.email}</div>}
+        {error.email && <div className={s.error}>{error.email}</div>}
         <input
-          className={`${s.input} ${s.marginAndPadding}`}
-          type="email"
-          name="email"
-          id="email"
-          onChange={this.handleInputData}
-          onBlur={this.handleBlur}
+          {...emailInputData}
         />
         <label className={s.marginAndPadding}>Create Password *</label>
-        {this.state.error.password && <div className={s.error}>{this.state.error.password}</div>}
-        <div className={`${s.passwordWithEye} ${s.marginAndPadding}`}>
+        {error.password && <div className={s.error}>{error.password}</div>}
+        <div className={`${s.passwordWithEye} ${s.marginAndPadding} ${error.password && error.password !== undefined ? s.redError : ''}`}>
         <input
-            id="revealPassword"
-            className={`${s.deleteBorder} ${this.state.error.password && this.state.error.password !== undefined ? s.redTransparentError : ''}`}
-            type={this.state.revealPassword}
-            name="password"
-            autoComplete="off"
-            value={this.state.newUser && this.state.newUser.password}
-            onChange={this.handleInputData}
-            onBlur={this.handleBlur}
-          />
-          {this.state.eye 
+          {...passwordInputData}
+        />
+          {eye 
           ? <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye"></i></button> 
           : <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button>}        </div>
         <button className={`${s.input} ${s.marginAndPadding}`} type="submit">
