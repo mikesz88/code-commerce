@@ -22,17 +22,18 @@
     height: 100px;
 }
 
-.loginCenter {
-    margin: 0.5rem auto;
+.cartCenter {
+    margin: 1rem auto;
     text-align: center;
 }
 
 .directions {
     display: flex;
+    width: 100%;
     flex-direction: column;
     align-items: center;
     border: 1px solid black;
-    margin: 0.5rem auto;
+    margin: 1rem auto;
     padding: 1rem;
     border-radius: 8px;
 }

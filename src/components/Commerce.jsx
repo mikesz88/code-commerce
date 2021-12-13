@@ -86,14 +86,22 @@ class Commerce extends React.Component {
                 {cart.display && <Cart 
                     cart={cart}
                     payment={payment}
-                    shipping={shipping}
                     updateCart={this.updateCart}
+                    updateStoreDisplay={this.updateStoreDisplay}
                     updatePayment={this.updatePayment}
                     updateShipping={this.updateShipping}
                     deleteCartItem={this.deleteCartItem}
                     deletePaymentItem={this.deletePaymentItem}
                 />}
-                {shipping.display && <Shipping />}
+                {shipping.display && <Shipping
+                    cart={cart}
+                    payment={payment}
+                    shipping={shipping}
+                    updateCart={this.updateCart}
+                    updatePayment={this.updatePayment}
+                    updateStoreDisplay={this.updateStoreDisplay}
+                    updateShipping={this.updateShipping}
+                />}
                 {payment.display && <Payment />}
                 {/* Confirmation Screen Needed or ternary with payment? */}
             </div>

@@ -5,15 +5,8 @@ class CodeItemsForSale extends React.Component {
     // eslint-disable-next-line no-useless-constructor
     constructor(props) {
         super(props);
-/*         this.state = {
-            storeDisplay: this.props.storeDisplay,
-            codeItems: this.props.codeItems,
-            cart: this.props.cart,
-            payment: this.props.payment,
-            currentUser: this.props.currentUser,
-        } */
-
     }    
+
     updateLogin = (state, func) => this.props.updateLogin(state, func);
     updateCart = (state, func) => this.props.updateCart(state, func);
     updatePayment = (state, func) => this.props.updatePayment(state, func);
@@ -42,8 +35,13 @@ class CodeItemsForSale extends React.Component {
     }
 
     login = () => {
-        this.updateStoreDisplay({display: false})
-        this.updateLogin({display: true})
+        this.updateStoreDisplay({display: false});
+        this.updateLogin({display: true});
+    }
+
+    goToCart = () => {
+        this.updateStoreDisplay({display: false});
+        this.updateCart({display: true});
     }
 
     checkLogin = (name, value) => {
@@ -52,14 +50,26 @@ class CodeItemsForSale extends React.Component {
 
     
     render() {
-        const { codeItems } = this.props;
+        const { codeItems, currentUser } = this.props;
         const price = 'price';
         const img = 'img';
 
         return(
             <div className={`container`}>
                 <div className={`${s.loginCenter}`}>
-                    <button className={`btn btn-primary round-pill`} onClick={this.login}>Log in</button>
+                    {currentUser 
+                    ? (
+                    <div className={s.cartCenter}>
+                        <button className={`btn btn-primary round-pill`} onClick={this.goToCart}>Cart</button> 
+                    </div>
+                    )
+                    : (
+                        <div className={s.directions}>
+                            <h3 className={`header-md`}> Click any to add to cart!</h3>
+                            <p className={`caption`}>You must log in first before you are able to add to cart!</p>
+                            <button className={`btn btn-primary round-pill`} onClick={this.login}>Log in</button>
+                        </div>
+                    )}
                 </div>
                 <div className={`${s.codeStoreContainer}`}>
                 {Object.keys(codeItems).map(code => (
@@ -72,11 +82,6 @@ class CodeItemsForSale extends React.Component {
                         : <button onClick={() => this.deleteItem(code, codeItems[code])}>Remove from Cart</button>}
                     </div>
                 ))}
-                </div>
-                <div className={s.directions}>
-                    <h3 className={`header-md`}> Click any to add to cart!</h3>
-                    <p className={`caption`}>You must log in first before you are able to add to cart!</p>
-                    <button className={`btn btn-primary round-pill`} onClick={this.login}>Log in</button>
                 </div>
             </div>
         )

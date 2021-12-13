@@ -10,36 +10,49 @@ class Cart extends React.Component {
         super(props);
 
     }
+
+    updateCart = (state, func) => this.props.updateCart(state, func);
+    updateStoreDisplay = (state, func) => this.props.updateStoreDisplay(state, func);    
+
+    backToStore = () => {
+        this.updateCart({display: false})
+        this.updateStoreDisplay({display: true})
+    }
+
     render() {
         const { 
             cart, 
             payment, 
-            shipping, 
             updateCart, 
             updatePayment,
             updateShipping, 
             deleteCartItem, 
             deletePaymentItem, 
         } = this.props;
+
         return(
-            <div className={`container ${s.cartFlex}`}>
-                <CartContainer 
-                    cart={cart} 
-                    payment={payment}
-                    updateCart={updateCart}
-                    updatePayment={updatePayment}
-                    deleteCartItem={deleteCartItem}
-                    deletePaymentItem={deletePaymentItem}
-                />
-                <CartSummary
-                    payment={payment}
-                    cart={cart}
-                    shipping={shipping}
-                    updatePayment={updatePayment}
-                    updateCart={updateCart}
-                    updateShipping={updateShipping}
-                />
-            </div>
+            <>
+                <div className={s.storeButtonCenter}>
+                    <button className={'btn btn-primary round-pill'} onClick={this.backToStore}>Back to Store</button>
+                </div>
+                <div className={`container ${s.cartFlex}`}>
+                    <CartContainer 
+                        cart={cart} 
+                        payment={payment}
+                        updateCart={updateCart}
+                        updatePayment={updatePayment}
+                        deleteCartItem={deleteCartItem}
+                        deletePaymentItem={deletePaymentItem}
+                    />
+                    <CartSummary
+                        payment={payment}
+                        cart={cart}
+                        updatePayment={updatePayment}
+                        updateCart={updateCart}
+                        updateShipping={updateShipping}
+                    />
+                </div>
+            </>
         )
     }
 }

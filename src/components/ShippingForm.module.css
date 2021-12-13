@@ -1,0 +1,47 @@
+.shippingInfoContainer {
+    flex: 1;
+    border: 1px solid black;
+    margin-right: 0.5rem;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.flexColumn div {
+    margin: 1rem;
+}
+
+.flexRow {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.labelWidth {
+    padding: 1rem;
+}
+
+table {
+    width: 80%;
+    margin: 0 auto;
+}
+
+table tr td {
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    margin: 0.25rem;
+}
+
+table tr td input,
+table tr td select {
+    flex: 1;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}

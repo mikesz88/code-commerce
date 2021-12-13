@@ -1,8 +1,3 @@
-/* 
-1. Resetting state variables when switching between sign in and create account
-2. Move error messages to below input fields
-3. Checked radio start value react function (or leave it blank) */
-
 import React from "react";
 import s from "../components/Login.module.css";
 import { INIT_CARD } from "./stateLogin";
@@ -30,8 +25,13 @@ class Login extends React.Component {
     const { name, value } = e.target;
 
     this.setState({
-      newUser: INIT_CARD,
       [name]: value,
+      eye: false,
+      revealPassword: 'password',
+      newUser: INIT_CARD,
+      error: {},
+      generalError: false
+
     });
   };
 
@@ -310,45 +310,45 @@ class Login extends React.Component {
         : null}
         <h2 className={`header-sm`}>Create an Account</h2>
         <label className={s.marginAndPadding}>Your E-Mail Address *</label>
-        {error.email && <div className={s.error}>{error.email}</div>}
         <input
           {...emailInputData}
-        />
+          />
+          {error.email && <div className={s.error}>{error.email}</div>}
         <label className={s.marginAndPadding}>Create Password *</label>
-        {error.password && <div className={s.error}>{error.password}</div>}
         <div className={`${s.passwordWithEye} ${s.marginAndPadding} ${error.password && error.password !== undefined ? s.redError : ''}`}>
           <input
             {...passwordInputData}
-          />
+            />
           {eye 
           ? <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button> 
           : <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye"></i></button>}
         </div>
+          {error.password && <div className={s.error}>{error.password}</div>}
         <p className={`${s.finePrint}`}>
           Password must be 8-20 characters, including: at least one capital
           letter, at least one small letter, one number and one special
           character - ! @ # $ % ^ & * ( ) _ +
         </p>
         <label className={s.marginAndPadding}>Confirm Password *</label>
-        {error.confirmPassword && <div className={s.error}>{error.confirmPassword}</div>}
         <input
           {...confirmPasswordInputData}
-        />
+          />
+          {error.confirmPassword && <div className={s.error}>{error.confirmPassword}</div>}
         <label className={s.marginAndPadding}>First Name *</label>
-        {error.firstName && <div className={s.error}>{error.firstName}</div>}
         <input
           {...firstNameInputData}
-        />
+          />
+          {error.firstName && <div className={s.error}>{error.firstName}</div>}
         <label className={s.marginAndPadding}>Last Name *</label>
-        {error.lastName && <div className={s.error}>{error.lastName}</div>}
         <input
           {...lastNameInputData}
-        />
+          />
+          {error.lastName && <div className={s.error}>{error.lastName}</div>}
         <label className={s.marginAndPadding}>PostCode</label>
-        {error.postCode && <div className={s.error}>{error.postCode}</div>}
         <input
           {...postCodeInputData}
-        />
+          />
+          {error.postCode && <div className={s.error}>{error.postCode}</div>}
         <button className={`${s.input} ${s.marginAndPadding}`} type="submit">
           SAVE
         </button>
@@ -417,8 +417,8 @@ class Login extends React.Component {
 
   render() {
     const inputData = [
-      {type: 'radio', name: 'userType', value: 'signIn', id: 'signIn', onChange: this.handleRadioButton, text: 'Sign In'},
-      {type: 'radio', name: 'userType', value: 'newUser', id: 'newUser', onChange: this.handleRadioButton, text: 'Create Account'}
+      {type: 'radio', name: 'userType', value: 'signIn', id: 'signIn', onChange: this.handleRadioButton, text: 'Sign In', defaultChecked: 'defaultChecked'},
+      {type: 'radio', name: 'userType', value: 'newUser', id: 'newUser', onChange: this.handleRadioButton, text: 'Create Account', defaultChecked: ''}
     ];
 
     return (
@@ -438,6 +438,7 @@ class Login extends React.Component {
                   value={item.value}
                   id={item.id}
                   onChange={item.onChange}
+                  defaultChecked={item.defaultChecked}
                   /> 
                   <label for={item.name}>{item.text}</label>
                 </>

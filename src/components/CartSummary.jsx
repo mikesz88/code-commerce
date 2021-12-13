@@ -1,8 +1,3 @@
-/* 
-1. Update store display to show checkOut button as long as current user is true.
-2. start working on shipping screen
-*/
-
 import React from 'react';
 import s from '../components/CartSummary.module.css';
 
@@ -75,18 +70,20 @@ class CartSummary extends React.Component {
     }
     
     render() {
+        const { payment } = this.props;
+        const { discountDisabled, error } = this.state;
+
         return(
             <div className={s.cartSummaryContainer}>
-                <>
                     <h3 className={`header-sm`}>Summary</h3>
                     <hr />
                     <div>
                         <label className={`caption`}>Do you have a promo code?</label>
                         <form onSubmit={this.onSubmit}>
                             <input type="text" name="coupon" id="coupon" placeholder='code' onChange={this.handleChange}/>
-                            <button disabled={this.state.discountDisabled} type="submit">APPLY</button>
-                            {this.state.error 
-                            ? <div className={s.error}>{this.state.error}</div> 
+                            <button disabled={discountDisabled} type="submit">APPLY</button>
+                            {error 
+                            ? <div className={s.error}>{error}</div> 
                             : null}
                             <button onClick={this.resetCoupon} type='reset'>RESET</button>
                         </form>
@@ -95,24 +92,23 @@ class CartSummary extends React.Component {
                     <div>
                         <div className={s.flexCartCompute}> 
                             <span>Cart Subtotal:</span>
-                            <span>{this.moneyDenomination(this.props.payment.subTotal)}</span>
+                            <span>{this.moneyDenomination(payment.subTotal)}</span>
                         </div>
                         <div className={s.flexCartCompute}> 
                             <span>Shipping & Handling:</span>
-                            <span>{this.props.shipping.shippingTotal ? this.props.shipping.shippingTotal : this.moneyDenomination(0)}</span>
+                            <span>{payment.shippingTotal ? payment.shippingTotal : this.moneyDenomination(0)}</span>
                         </div>
                         <div className={s.flexCartCompute}> 
                             <span>Discount:</span>
-                            <span>{this.props.payment.discount ? this.moneyDenomination(this.props.payment.discount) : this.moneyDenomination(0)}</span>
+                            <span>{payment.discount ? this.moneyDenomination(payment.discount) : this.moneyDenomination(0)}</span>
                         </div>
                         <div className={s.flexCartCompute}> 
                             <span><strong>Cart Total:</strong></span>
-                            <span>{this.moneyDenomination(this.props.payment.cartTotal)}</span>
+                            <span>{this.moneyDenomination(payment.cartTotal)}</span>
                         </div>
                         <hr />
                     </div>
                     <button disabled={this.checkOutButton()} onClick={this.checkout}>CHECKOUT</button>
-                </>
             </div>
         )
     }
