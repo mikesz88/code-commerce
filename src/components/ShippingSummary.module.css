@@ -13,3 +13,8 @@
     padding-left: 2rem;
     padding-right: 2rem;
 }
+
+.shippingSummaryItemContainer {
+    overflow-y: auto;
+    max-height: 55vh;
+}

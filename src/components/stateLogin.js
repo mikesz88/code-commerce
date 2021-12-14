@@ -50,49 +50,57 @@ const commerceComponents = {
                 price: 99.99,
                 img: HTMLandCSSImg,
                 file: '50MB',
-                linesOfCode: 225
+                linesOfCode: 225,
+                qty: 1
             },
             SaaS: {
                 price: 149.99,
                 img: SaaSImg,
                 file: '75MB',
-                linesOfCode: 425
+                linesOfCode: 425,
+                qty: 1
             },
             Responsive: {
                 price: 199.99,
                 img: ResponsiveImg,
                 file: '100MB',
-                linesOfCode: 525
+                linesOfCode: 525,
+                qty: 1
             },
             JavaScript: {
                 price: 249.99,
                 img: JavaScriptImg,
                 file: '200MB',
-                linesOfCode: 825
+                linesOfCode: 825,
+                qty: 1
             },
             Portfolio: {
                 price: 299.99,
                 img: PortfolioImg,
                 file: '1GB',
-                linesOfCode: 1000
+                linesOfCode: 1000,
+                qty: 1
             },
             React: {
                 price: 349.99,
                 img: ReactImg,
                 file: '1.25GB',
-                linesOfCode: 2500
+                linesOfCode: 2500,
+                qty: 1
             },
             Angular: {
                 price: 399.99,
                 img: AngularImg,
                 file: '1.75GB',
-                linesOfCode: 2250
+                linesOfCode: 2250,
+                qty: 1
             },
             CustomOrder: {
                 price: 499.99,
                 img: CustomOrderImg,
                 file: '5GB',
-                linesOfCode: 5000
+                linesOfCode: 5000,
+                qty: 1
             },
         }
     },

@@ -26,7 +26,11 @@ class CartItems extends React.Component {
     quantityCount = e => {
         this.setState({
            [e.target.name]: Number(e.target.value)
-        }, this.priceAmount(e))
+        }, this.priceAmount(e));
+       this.updateCart({[e.target.name]: {
+           ...this.props.cart[e.target.name],
+            qty: Number(e.target.value)
+       }})
     }
 
     deleteFromCart = () => {

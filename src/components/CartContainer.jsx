@@ -21,14 +21,19 @@ class CartContainer extends React.Component {
         return(
             <div className={s.cartInfoContainer}>
                 <CartHeader />
-                {Object.keys(cart).map(name => (
-                    name !== 'display' ?
+                {Object
+                .keys(cart)
+                .filter(item => item !== 'display')
+                .map(name => (
+                    name ?
                     <CartItems 
                         name = {name}
                         img = {cart[name]['img']}
                         price = {cart[name]['price']}
                         file = {cart[name]['file']}
                         linesOfCode = {cart[name]['linesOfCode']}
+                        cart={cart}
+                        cartItemQty={cart['qty']}
                         payment={payment}
                         updateCart={updateCart}
                         updatePayment={updatePayment}

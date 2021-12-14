@@ -262,6 +262,7 @@ class Login extends React.Component {
     : this.handleValidations(name, value);
   }
 
+  loginType = () => (this.state.userType === "newUser" ? true : false);
   
   newUser = () => {
     const { generalError, error, newUser, eye, revealPassword} = this.state;
@@ -413,7 +414,6 @@ class Login extends React.Component {
     );
   };
 
-  loginType = () => (this.state.userType === "newUser" ? true : false);
 
   render() {
     const inputData = [

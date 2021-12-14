@@ -1,5 +1,6 @@
 import React from 'react';
 import s from '../components/ShippingSummary.module.css';
+import ShippingSummaryItem from './ShippingSummaryItem';
 
 class ShippingSummary extends React.Component {
     // eslint-disable-next-line no-useless-constructor
@@ -21,19 +22,31 @@ class ShippingSummary extends React.Component {
     }
 
     render() {
-        const { payment } = this.props;
+        const { payment, cart } = this.props;
+        const amountOfItemsInCart = Object.keys(cart).filter(item => item !== 'display').length;
         return (
             <div className={s.ShippingSummaryContainer}>
                 <h3 className={`header-sm`}>Summary</h3>
-                <div>
+                <hr />
+                <div><strong>{amountOfItemsInCart} items</strong> in your cart.</div>
+                <hr />
+                <div className={s.shippingSummaryItemContainer}>
+                    {Object
+                    .keys(cart)
+                    .filter(item => item !=='display')
+                    .map(name => (
+                        name ? 
+                        <ShippingSummaryItem 
+                            name={name}
+                            img = {cart[name]['img']}
+                            file = {cart[name]['file']}
+                            cartItemQty={cart[name]['qty']}
+                            priceWithQty={payment[name]}
+                        /> : null
+                    ))}
                     {/* 
-                    1. create a quantity state.
-                    2. Adjust Cart Items to reflect quantity change
-                    3. Create a state variable to reflect the amount of items in cart
-                    4. Create a Mapped List of Cart Items that shows:
-                    - img, title, file size, quantity, and price
                     5. Start logic on shipping info and payment button
-                    */}
+                */}
                 </div>
                 <hr />
                 <div>
