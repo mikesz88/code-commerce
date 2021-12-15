@@ -23,7 +23,8 @@
 }
 
 .labelWidth {
-    padding: 1rem;
+    padding-top: 0rem;
+    padding-bottom: 1rem;
 }
 
 table {
@@ -31,17 +32,26 @@ table {
     margin: 0 auto;
 }
 
-table tr td {
+/* table tr th {
+    vertical-align: bottom;
+} */
+
+.flexContainer {
     display: flex;
-    justify-content: stretch;
+    justify-content: flex-start;
     align-items: center;
-    margin: 0.25rem;
+    margin: 0.25rem auto auto 2rem;
 }
 
-table tr td input,
-table tr td select {
-    flex: 1;
+.flexContainer input,
+.flexContainer select {
+    width: 300px;
     padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+}
+
+.errorMessage {
+    padding-left: 1rem;
+    color: red;
 }

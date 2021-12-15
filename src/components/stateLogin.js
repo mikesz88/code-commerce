@@ -111,7 +111,7 @@ const commerceComponents = {
         display: false,
     },
     shipping: {
-        display: true
+        display: true,
     },
     payment: {
         display: false,
@@ -132,7 +132,7 @@ export const stateComponents = {
 }
 
 export const countryList = [
-    <option value="" disabled selected>Select</option>,
+    <option value="">Select</option>,
     <option value="Afganistan">Afghanistan</option>,
     <option value="Albania">Albania</option>,
     <option value="Algeria">Algeria</option>,

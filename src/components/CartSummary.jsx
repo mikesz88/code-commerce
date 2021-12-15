@@ -96,7 +96,7 @@ class CartSummary extends React.Component {
                         </div>
                         <div className={s.flexCartCompute}> 
                             <span>Shipping & Handling:</span>
-                            <span>{payment.shippingTotal ? payment.shippingTotal : this.moneyDenomination(0)}</span>
+                            <span>{payment.shippingTotal ? this.moneyDenomination(payment.shippingTotal) : this.moneyDenomination(0)}</span>
                         </div>
                         <div className={s.flexCartCompute}> 
                             <span>Discount:</span>

@@ -7,6 +7,9 @@ class Shipping extends React.Component {
     // eslint-disable-next-line no-useless-constructor
     constructor(props) {
         super(props);
+        this.state = {
+            disabled: true
+        }
     }
 
     updateCart = (state, func) => this.props.updateCart(state, func);
@@ -23,6 +26,17 @@ class Shipping extends React.Component {
         this.updateCart({display: true});
     }
 
+    updateState = (name, state, func) => {
+        this.setState(prevState => ({
+            [name]: {
+            ...prevState[name],
+            ...state
+            }
+        }), func)
+    }
+
+    updateDisabledButton = (state, func) => this.updateState('disabled', state, func);
+
     render() {
         const { 
             cart, 
@@ -34,6 +48,7 @@ class Shipping extends React.Component {
             deleteCartItem, 
             deletePaymentItem, 
         } = this.props;
+        const {disabled} = this.state;
         return (
                 <>
                 <div className={s.buttonDisplay}>
@@ -46,12 +61,15 @@ class Shipping extends React.Component {
                         payment={payment}
                         updateShipping={updateShipping}
                         updatePayment={updatePayment}
+                        disabled={disabled}
+                        updateDisabledButton={this.updateDisabledButton}
+
                     />
                     <ShippingSummary
                         payment={payment}
                         cart={cart}
-                        updateShipping={updateShipping}
-                        updatePayment={updatePayment}
+                        shipping={shipping}
+                        disabled={disabled}
                         />
                 </div>
                 </>

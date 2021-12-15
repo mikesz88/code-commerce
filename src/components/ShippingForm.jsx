@@ -3,34 +3,40 @@ import s from '../components/ShippingForm.module.css';
 import { countryList } from './stateLogin';
 
 /* 
-1. Finish the error message to at least not leave it blank.
-2. Figure out a way to store the data onto shipping with a click on the Payment button (create a state variable on payment when clicked it will turn true and store the variables into shipping state
-    and go to the next screen.)
-3. make sure that payment button is grayed out until all text items are filled with no error message in order to move on.
-4. Delivery radio button to included with above payment button requirements. But also show the price reflection on shipping summary with proper logic
-5. error messages to show in <th> spots
-6. Confirm, but then move on to payment. 
+1. Finish Shipping logic (it is repeatedly adding because of the asynchronous part and checked issues)
+***Add shipping reset of values if they go back to store or cart***
+2. Finish the checkErrorBeforeSave to make it error check every input
+3. update the payment button to check for error messaging with the or option of the 9 due to the google autofill
+4. Confirm, but then move on to payment.
  */
+
+const INIT_CARD = {
+    delivery: '',
+    firstName: '',
+    lastName: '',
+    postCode: '',
+    phoneNumber: '',
+    addressTitle: '',
+    address: '',
+    country: '',
+    cityTown: '',
+    stateProvince: '',
+    error: {}
+}
 
 
 class ShippingForm extends React.Component {
     // eslint-disable-next-line no-useless-constructor
     constructor(props) {
         super(props);
-        this.state = {
-            delivery: '',
-            firstName: '',
-            lastName: '',
-            postCode: '',
-            phoneNumber: '',
-            addressTitle: '',
-            address: '',
-            country: '',
-            cityTown: '',
-            stateProvince: '',
-            error: {}
-        };
+        this.state = INIT_CARD;
     }
+
+    
+    updatePayment = (state, func) => this.props.updatePayment(state, func);
+    updateShipping = (state, func) => this.props.updateShipping(state,func);
+    updateDisabledButton = (state, func) => this.props.updateDisabledButton(state,func);
+
 
     handleInputData = e => {
         e.preventDefault()
@@ -55,12 +61,23 @@ class ShippingForm extends React.Component {
                     [name]: value
                 })) 
             }
-        } else if (name !== 'phoneNumber') {
+        } else if (name !== 'phoneNumber' && name !== 'delivery') {
             this.setState(prevState => ({
                 ...prevState,
-                [name]: value
+                [name]: value.toUpperCase()
             }))
-        } 
+        } else if (name === 'delivery') {
+                this.updatePayment({cartTotal: this.props.payment.cartTotal - this.props.payment.shippingTotal}, this.updatePayment({shippingTotal: 0}));
+            if (value === 'standardDelivery') {
+                if (this.props.payment.cartTotal >= 250) {
+                    this.updatePayment({shippingTotal: 0});
+                } else {
+                    this.updatePayment({shippingTotal: 25}, this.updatePayment({cartTotal: (this.props.payment.cartTotal + 25)}));
+                }
+            } else {
+                    this.updatePayment({shippingTotal: 50}, this.updatePayment({cartTotal: (this.props.payment.cartTotal + 50)}));
+            }
+        }
       }
 
     firstNameCheck = value => {
@@ -87,88 +104,124 @@ class ShippingForm extends React.Component {
         return !error ? 'Please enter a valid Phone Number' : undefined;
     }
 
+    otherFieldCheck = value => {
+        return !value ? 'Required' : undefined;
+    }
+
     handleValidations = (target, value) => {
         let errorText;
         switch (target) {
             case 'firstName':
                 errorText = this.firstNameCheck(value);
+                errorText === undefined ? this.updateDisabledButton({[target]: false}) : this.updateDisabledButton({[target]: true}) 
                 this.setState(prevState => ({  error: { ...prevState.error, firstName: errorText }}))
             break;      
             case 'lastName':
                 errorText = this.lastNameCheck(value);
+                errorText === undefined ? this.updateDisabledButton({[target]: false}) : this.updateDisabledButton({[target]: true}) 
                 this.setState(prevState => ({  error: { ...prevState.error, lastName: errorText }}))
             break;
             case 'postCode':
                 errorText = this.postCodeCheck(value);
+                errorText === undefined ? this.updateDisabledButton({[target]: false}) : this.updateDisabledButton({[target]: true}) 
                 this.setState(prevState => ({  error: { ...prevState.error, postCode: errorText }}))
             break;
             case 'phoneNumber':
                 errorText = this.phoneCheck(value);
+                errorText === undefined ? this.updateDisabledButton({[target]: false}) : this.updateDisabledButton({[target]: true}) 
                 this.setState(prevState => ({  error: { ...prevState.error, phone: errorText }}))
             break;
             default:
+                errorText = this.otherFieldCheck(value);
+                errorText === undefined ? this.updateDisabledButton({[target]: false}) : this.updateDisabledButton({[target]: true}) 
+                this.setState(prevState => ({  error: { ...prevState.error, [target]: errorText }}))
             break;
         }
       }
 
     handleBlur = e => this.handleValidations(e.target.name, e.target.value);
 
+    proceedToPayment = () => {
+        this.updateShipping({display: false})
+        this.updatePayment({display: true})
+    }
+
+    checkErrorBeforeSave = () => {
+        return false
+    }
+
+    onSubmit = e => {
+        e.preventDefault();
+        const errorCheck = this.checkErrorBeforeSave();
+        if (!errorCheck) {
+            this.updateShipping({shippingInfo: this.state});
+            this.setState({INIT_CARD})
+            this.proceedToPayment();
+            console.log('test');
+        }
+    }
+
     render() {
+        const {
+          firstName,
+          lastName,
+          postCode,
+          phone,
+          addressTitle,
+          address,
+          country,
+          cityTown,
+          stateProvince,
+        } = this.state.error;
 
         return (
             <div className={s.shippingInfoContainer}>
                 <h3 className={`header-sm`}>Shipping Info</h3>
                 <hr />
-                <table>
-                    <tbody>
-                        <tr>
-                            <th><label className={s.labelWidth}>Address Title</label></th>
-                            <td>
-                                <select onChange={this.handleInputData} name="addressTitle" id="addressTitle">
-                                    <option value="" disabled selected>Select</option>,
-                                    <option value="residence" defaultChecked>Residence</option>
-                                    <option value="business">Business</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><label className={s.labelWidth}>First Name</label></th>
-                            <td><input onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="firstName" id="firstName" /></td>
-                        </tr>
-                        <tr>
-                            <th><label className={s.labelWidth}>Last Name</label></th>
-                            <td><input onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="lastName" id="lastName" /></td>
-                        </tr>
-                        <tr>
-                            <th><label className={s.labelWidth}>Your Address</label></th>
-                            <td><input onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="address" id="address" /></td>
-                        </tr>
-                        <tr>
-                            <th><label className={s.labelWidth}>Zip Code</label></th>
-                            <td><input onBlur={this.handleBlur} onChange={this.handleInputData} type="number" name="postCode" id="postCode" /></td>
-                        </tr>
-                        <tr>
-                            <th><label className={s.labelWidth}>Country</label></th>
-                            <td>
-                                <select onChange={this.handleInputData} name="country" id="country">
-                                {countryList}
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><label className={s.labelWidth}>City/Town</label></th>
-                            <td><input onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="cityTown" id="cityTown" /></td>
-                        </tr>
-                        <tr>
-                            <th><label className={s.labelWidth}>State/Province</label></th>
-                            <td><input onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="stateProvince" id="stateProvince" /></td>
-                        </tr>
-                        <tr>
-                            <th><label className={s.labelWidth}>Phone</label></th>
-                            <td><input onBlur={this.handleBlur} onChange={this.handleInputData} type="tel" name="phoneNumber" id="phoneNumber" maxLength='14' value={this.state.phoneNumber} autoComplete='off'/></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <form id='shippingForm' onSubmit={this.onSubmit}>
+                    <div className={s.flexContainer}>
+                        <select onBlur={this.handleBlur} onChange={this.handleInputData} name="addressTitle" id="addressTitle">
+                            <option className={s.firstOption} value="">Type of Address</option>,
+                            <option value="residence" defaultChecked>Residence</option>
+                            <option value="business">Business</option>
+                        </select>                                    
+                        {addressTitle ? (<div className={s.errorMessage}>{addressTitle}</div>) : null}
+                    </div>                      
+                    <div className={s.flexContainer}>
+                        <input placeholder='First Name' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="firstName" id="firstName" value={this.state.firstName}/>
+                        {firstName ? (<div className={s.errorMessage}>{firstName}</div>) : null}
+                    </div>
+                    <div className={s.flexContainer}>
+                        <input placeholder='Last Name' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="lastName" id="lastName" value={this.state.lastName}/>
+                        {lastName ? (<div className={s.errorMessage}>{lastName}</div>) : null}
+                    </div>
+                    <div className={s.flexContainer}>
+                        <input placeholder='Address' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="address" id="address" value={this.state.address}/>
+                        {address ? (<div className={s.errorMessage}>{address}</div>) : null}
+                    </div>
+                    <div className={s.flexContainer}>
+                        <input placeholder='Zip Code' onBlur={this.handleBlur} onChange={this.handleInputData} type="number" name="postCode" id="postCode" value={this.state.postCode}/>
+                        {postCode ? (<div className={s.errorMessage}>{postCode}</div>) : null}
+                    </div>
+                    <div className={s.flexContainer}>
+                        <select onBlur={this.handleBlur} onChange={this.handleInputData} name="country" id="country">
+                        {countryList}
+                        </select>
+                        {country ? (<div className={s.errorMessage}>{country}</div>) : null}
+                    </div>
+                    <div className={s.flexContainer}>
+                        <input placeholder='City/Town' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="cityTown" id="cityTown" value={this.state.cityTown}/>
+                        {cityTown ? (<div className={s.errorMessage}>{cityTown}</div>) : null}
+                    </div>
+                    <div className={s.flexContainer}>
+                        <input placeholder='State/Province' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="stateProvince" id="stateProvince" value={this.state.stateProvince}/>
+                        {stateProvince ? (<div className={s.errorMessage}>{stateProvince}</div>) : null}
+                    </div>
+                    <div className={s.flexContainer}>
+                        <input placeholder='Phone' onBlur={this.handleBlur} onChange={this.handleInputData} type="tel" name="phoneNumber" id="phoneNumber" maxLength='14' value={this.state.phoneNumber} autoComplete='off'/>
+                        {phone ? (<div className={s.errorMessage}>{phone}</div>) : null}
+                    </div>
+                </form>
                 <hr />
                 <div>
                     <h3 className={`header-sm`}>Shipping Method</h3>
