@@ -100,7 +100,7 @@ class CartSummary extends React.Component {
                         </div>
                         <div className={s.flexCartCompute}> 
                             <span>Discount:</span>
-                            <span>{payment.discount ? this.moneyDenomination(payment.discount) : this.moneyDenomination(0)}</span>
+                            <span>-{payment.discount ? this.moneyDenomination(payment.discount) : this.moneyDenomination(0)}</span>
                         </div>
                         <div className={s.flexCartCompute}> 
                             <span><strong>Cart Total:</strong></span>

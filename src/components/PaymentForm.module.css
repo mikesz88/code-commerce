@@ -1,0 +1,23 @@
+.cardFormContainer {
+    flex: 1;
+    border: 1px solid black;
+    margin-right: 0.5rem;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.inputContainer,
+.inputContainer > * {
+    margin: 1rem;
+}
+
+.inputContainer label {
+    display: inline-block;
+    width: 150px;
+}
+
+.submitButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

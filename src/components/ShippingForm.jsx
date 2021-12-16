@@ -2,14 +2,6 @@ import React from 'react';
 import s from '../components/ShippingForm.module.css';
 import { countryList } from './stateLogin';
 
-/* 
-1. Finish Shipping logic (it is repeatedly adding because of the asynchronous part and checked issues)
-***Add shipping reset of values if they go back to store or cart***
-2. Finish the checkErrorBeforeSave to make it error check every input
-3. update the payment button to check for error messaging with the or option of the 9 due to the google autofill
-4. Confirm, but then move on to payment.
- */
-
 const INIT_CARD = {
     delivery: '',
     firstName: '',
@@ -37,6 +29,31 @@ class ShippingForm extends React.Component {
     updateShipping = (state, func) => this.props.updateShipping(state,func);
     updateDisabledButton = (state, func) => this.props.updateDisabledButton(state,func);
 
+    handleRadioButton = e => {
+    const { name, value } = e.target;
+        this.setState(prevState => ({
+            ...prevState,
+            [name]: value
+        }), () => {
+            if (value === 'standardDelivery' && this.props.payment.cartTotal >= 250) {
+                this.updatePayment({cartTotal: this.props.payment.cartTotal - this.props.payment.shippingTotal}, () => {
+                    this.updatePayment({shippingTotal: 0});
+                });
+            } else if (value === 'standardDelivery' && this.props.payment.cartTotal < 250) {
+                this.updatePayment({cartTotal: this.props.payment.cartTotal - this.props.payment.shippingTotal}, () => {
+                    this.updatePayment({shippingTotal: 25}, () => {
+                     this.updatePayment({cartTotal: this.props.payment.cartTotal + 25})   
+                    });
+                });
+            } else if (value === 'expressDelivery') {
+                this.updatePayment({cartTotal: this.props.payment.cartTotal - this.props.payment.shippingTotal}, () => {
+                    this.updatePayment({shippingTotal: 50}, () => {
+                     this.updatePayment({cartTotal: this.props.payment.cartTotal + 50})   
+                    });
+                });
+            }
+        })
+    }
 
     handleInputData = e => {
         e.preventDefault()
@@ -61,22 +78,11 @@ class ShippingForm extends React.Component {
                     [name]: value
                 })) 
             }
-        } else if (name !== 'phoneNumber' && name !== 'delivery') {
+        } else if (name !== 'phoneNumber') {
             this.setState(prevState => ({
                 ...prevState,
                 [name]: value.toUpperCase()
             }))
-        } else if (name === 'delivery') {
-                this.updatePayment({cartTotal: this.props.payment.cartTotal - this.props.payment.shippingTotal}, this.updatePayment({shippingTotal: 0}));
-            if (value === 'standardDelivery') {
-                if (this.props.payment.cartTotal >= 250) {
-                    this.updatePayment({shippingTotal: 0});
-                } else {
-                    this.updatePayment({shippingTotal: 25}, this.updatePayment({cartTotal: (this.props.payment.cartTotal + 25)}));
-                }
-            } else {
-                    this.updatePayment({shippingTotal: 50}, this.updatePayment({cartTotal: (this.props.payment.cartTotal + 50)}));
-            }
         }
       }
 
@@ -104,10 +110,12 @@ class ShippingForm extends React.Component {
         return !error ? 'Please enter a valid Phone Number' : undefined;
     }
 
+    deliveryCheck = value => !value ? 'Required' : undefined;
+
     otherFieldCheck = value => {
         return !value ? 'Required' : undefined;
     }
-
+    
     handleValidations = (target, value) => {
         let errorText;
         switch (target) {
@@ -130,7 +138,13 @@ class ShippingForm extends React.Component {
                 errorText = this.phoneCheck(value);
                 errorText === undefined ? this.updateDisabledButton({[target]: false}) : this.updateDisabledButton({[target]: true}) 
                 this.setState(prevState => ({  error: { ...prevState.error, phone: errorText }}))
-            break;
+                break;
+            case 'delivery':
+                errorText = this.deliveryCheck(value);
+                console.log(value);
+                errorText === undefined ? this.updateDisabledButton({[target]: false}) : this.updateDisabledButton({[target]: true}) 
+                this.setState(prevState => ({  error: { ...prevState.error, delivery: errorText }}))
+                break;
             default:
                 errorText = this.otherFieldCheck(value);
                 errorText === undefined ? this.updateDisabledButton({[target]: false}) : this.updateDisabledButton({[target]: true}) 
@@ -147,7 +161,22 @@ class ShippingForm extends React.Component {
     }
 
     checkErrorBeforeSave = () => {
-        return false
+        const { error } = this.state;
+        let errorValue = {};
+        let isError = false;
+        Object.keys(this.state).forEach(val => {
+            if (val !== 'error') {
+                let checkError = val;
+                if (!this.state[checkError].length || error[checkError]) {
+                    error[checkError]
+                    ? errorValue = { ...errorValue, [checkError]: error[checkError]}
+                    : errorValue = { ...errorValue, [checkError]: 'Required'};
+                    isError = true;
+                }
+            }
+        })
+        this.setState({ error: errorValue });
+        return isError
     }
 
     onSubmit = e => {
@@ -157,7 +186,6 @@ class ShippingForm extends React.Component {
             this.updateShipping({shippingInfo: this.state});
             this.setState({INIT_CARD})
             this.proceedToPayment();
-            console.log('test');
         }
     }
 
@@ -172,6 +200,7 @@ class ShippingForm extends React.Component {
           country,
           cityTown,
           stateProvince,
+          delivery
         } = this.state.error;
 
         return (
@@ -188,19 +217,19 @@ class ShippingForm extends React.Component {
                         {addressTitle ? (<div className={s.errorMessage}>{addressTitle}</div>) : null}
                     </div>                      
                     <div className={s.flexContainer}>
-                        <input placeholder='First Name' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="firstName" id="firstName" value={this.state.firstName}/>
+                        <input placeholder='First Name' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="firstName" id="firstName" autoComplete='off' value={this.state.firstName}/>
                         {firstName ? (<div className={s.errorMessage}>{firstName}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='Last Name' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="lastName" id="lastName" value={this.state.lastName}/>
+                        <input placeholder='Last Name' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="lastName" id="lastName" autoComplete='off' value={this.state.lastName}/>
                         {lastName ? (<div className={s.errorMessage}>{lastName}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='Address' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="address" id="address" value={this.state.address}/>
+                        <input placeholder='Address' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="address" id="address" autoComplete='off' value={this.state.address}/>
                         {address ? (<div className={s.errorMessage}>{address}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='Zip Code' onBlur={this.handleBlur} onChange={this.handleInputData} type="number" name="postCode" id="postCode" value={this.state.postCode}/>
+                        <input placeholder='Zip Code' onBlur={this.handleBlur} onChange={this.handleInputData} type="number" name="postCode" id="postCode" autoComplete='off' value={this.state.postCode}/>
                         {postCode ? (<div className={s.errorMessage}>{postCode}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
@@ -210,11 +239,11 @@ class ShippingForm extends React.Component {
                         {country ? (<div className={s.errorMessage}>{country}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='City/Town' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="cityTown" id="cityTown" value={this.state.cityTown}/>
+                        <input placeholder='City/Town' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="cityTown" id="cityTown" autoComplete='off' value={this.state.cityTown}/>
                         {cityTown ? (<div className={s.errorMessage}>{cityTown}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='State/Province' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="stateProvince" id="stateProvince" value={this.state.stateProvince}/>
+                        <input placeholder='State/Province' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="stateProvince" id="stateProvince" autoComplete='off' value={this.state.stateProvince}/>
                         {stateProvince ? (<div className={s.errorMessage}>{stateProvince}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
@@ -224,15 +253,15 @@ class ShippingForm extends React.Component {
                 </form>
                 <hr />
                 <div>
-                    <h3 className={`header-sm`}>Shipping Method</h3>
+                    <h3 className={`header-sm`}>Shipping Method {delivery ? (<span className={s.errorMessage}>{delivery}</span>) : null}</h3>
                     <div className={s.flexColumn}>
                         <div>
-                            <input onChange={this.handleInputData} type="radio" name="delivery" value='standardDelivery' id="standardDelivery" />
+                            <input onChange={this.handleRadioButton} onBlur={this.handleBlur} type="radio" name="delivery" value='standardDelivery' id="standardDelivery" />
                             <label>Standard</label>
                             <span>Delivery in 4-6 Business Days - Free ($250 min.)</span>
                         </div>
                         <div>
-                            <input onChange={this.handleInputData} type="radio" name="delivery" value='expressDelivery' id="expressDelivery" />
+                            <input onChange={this.handleRadioButton} onBlur={this.handleBlur} type="radio" name="delivery" value='expressDelivery' id="expressDelivery" />
                             <label>Express</label>
                             <span>Delivery in 1-3 Business Days - $50.00</span>
                         </div>

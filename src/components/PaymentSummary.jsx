@@ -1,25 +1,24 @@
-import React from 'react';
-import s from '../components/ShippingSummary.module.css';
-import ShippingSummaryItem from './ShippingSummaryItem';
+import React from "react";
+import s from '../components/PaymentSummary.module.css';
+import ShippingSummaryItem from "./ShippingSummaryItem";
 
-class ShippingSummary extends React.Component {
+class PaymentSummary extends React.Component {
     // eslint-disable-next-line no-useless-constructor
     constructor(props) {
         super(props);
     }
 
     moneyDenomination = amount => amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
-
+    
     render() {
         const { payment, cart } = this.props;
         const amountOfItemsInCart = Object.keys(cart).filter(item => item !== 'display').length;
-        const disabledButton = (Object.keys(this.props.disabled).some(item => this.props.disabled[item] === true));
         return (
-            <div className={s.ShippingSummaryContainer}>
-                <h3 className={`header-sm`}>Summary</h3>
+            <div className={s.paymentSummaryContainer}>
+                <h3>Summary</h3>
                 <hr />
                 <div><strong>{amountOfItemsInCart} items</strong> in your cart.</div>
-                <div className={s.shippingSummaryItemContainer}>
+                <div className={s.paymentSummaryItemContainer}>
                     {Object
                     .keys(cart)
                     .filter(item => item !=='display')
@@ -31,8 +30,8 @@ class ShippingSummary extends React.Component {
                             file = {cart[name]['file']}
                             cartItemQty={cart[name]['qty']}
                             priceWithQty={payment[name]}
-                        /> : null
-                    ))}
+                            /> : null
+                            ))}
                 </div>
                 <hr />
                 <div>
@@ -54,10 +53,11 @@ class ShippingSummary extends React.Component {
                     </div>
                     <hr />
                 </div>
-                <button type='submit' form='shippingForm' disabled={disabledButton} >PAYMENT</button>
+                {/* Shipping Info */}
+                <button form='paymentForm' className={`btn btn-primary round-pill`} type="submit">PAY {this.moneyDenomination(this.props.payment.cartTotal)}</button>
             </div>
         )
     }
 }
 
-export default ShippingSummary;
+export default PaymentSummary;

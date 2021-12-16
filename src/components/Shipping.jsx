@@ -8,22 +8,40 @@ class Shipping extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            disabled: true
+            disabled: {
+                address: true,
+                addressTitle: true,
+                cityTown: true,
+                country: true,
+                firstName: true,
+                lastName: true,
+                phoneNumber: true,
+                postCode: true,
+                stateProvince: true,
+                delivery: true,
+            }
         }
     }
 
     updateCart = (state, func) => this.props.updateCart(state, func);
     updateShipping = (state, func) => this.props.updateShipping(state, func);
     updateStoreDisplay = (state, func) => this.props.updateStoreDisplay(state, func);    
+    updatePayment = (state, func) => this.props.updatePayment(state, func);
 
     backToStore = () => {
         this.updateShipping({display: false});
         this.updateStoreDisplay({display: true});
+        this.updatePayment({cartTotal: this.props.payment.subTotal});
+        this.updatePayment({shippingTotal: 0});
+        this.updatePayment({discount: 0});
     }
 
     backToCart = () => {
         this.updateShipping({display: false});
         this.updateCart({display: true});
+        this.updatePayment({cartTotal: this.props.payment.subTotal});
+        this.updatePayment({shippingTotal: 0});
+        this.updatePayment({discount: 0});
     }
 
     updateState = (name, state, func) => {
@@ -42,11 +60,8 @@ class Shipping extends React.Component {
             cart, 
             payment, 
             shipping, 
-            updateCart, 
             updatePayment,
             updateShipping, 
-            deleteCartItem, 
-            deletePaymentItem, 
         } = this.props;
         const {disabled} = this.state;
         return (
@@ -63,14 +78,13 @@ class Shipping extends React.Component {
                         updatePayment={updatePayment}
                         disabled={disabled}
                         updateDisabledButton={this.updateDisabledButton}
-
                     />
                     <ShippingSummary
                         payment={payment}
                         cart={cart}
                         shipping={shipping}
                         disabled={disabled}
-                        />
+                    />
                 </div>
                 </>
         )

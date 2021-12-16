@@ -111,10 +111,10 @@ const commerceComponents = {
         display: false,
     },
     shipping: {
-        display: true,
+        display: false,
     },
     payment: {
-        display: false,
+        display: true,
         subTotal: 0,
         shippingTotal: 0,
         discount: 0,
