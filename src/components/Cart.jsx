@@ -32,7 +32,7 @@ class Cart extends React.Component {
 
         return(
             <>
-                <div className={s.storeButtonCenter}>
+                <div className={`container ${s.storeButtonCenter}`}>
                     <button className={'btn btn-primary round-pill'} onClick={this.backToStore}>Back to Store</button>
                 </div>
                 <div className={`container ${s.cartFlex}`}>

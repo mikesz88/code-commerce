@@ -66,7 +66,7 @@ class Shipping extends React.Component {
         const {disabled} = this.state;
         return (
                 <>
-                <div className={s.buttonDisplay}>
+                <div className={`container ${s.buttonDisplay}`}>
                     <button className={'btn btn-primary round-pill'} onClick={this.backToStore}>Back to Store</button>
                     <button className={'btn btn-primary round-pill'} onClick={this.backToCart}>Back to Cart</button>
                 </div>

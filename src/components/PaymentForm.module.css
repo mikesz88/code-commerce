@@ -6,6 +6,26 @@
     padding: 0.5rem;
 }
 
+.cardNumberContainer {
+    display: flex;
+}
+
+.cardNumberTransparentBorder {
+    border: none;
+    background: transparent;
+    padding: 1px 2px;
+}
+
+.cardNumberTransparentBorder:focus {
+    outline: none;
+}
+
+.cardNumberInputBorder {
+    border: 1px solid rgb(133, 133, 133);
+    padding: 1px;
+    position: relative;
+}
+
 .inputContainer,
 .inputContainer > * {
     margin: 1rem;
@@ -20,4 +40,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.error {
+    color: red;
 }

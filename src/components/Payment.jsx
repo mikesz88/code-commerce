@@ -44,7 +44,7 @@ class Payment extends React.Component {
     render() {
         return(
             <>
-                <div className={s.buttonDisplay}>
+                <div className={`container ${s.buttonDisplay}`}>
                     <button className={'btn btn-primary round-pill'} onClick={this.backToStore}>Back to Store</button>
                     <button className={'btn btn-primary round-pill'} onClick={this.backToCart}>Back to Cart</button>
                     <button className={'btn btn-primary round-pill'} onClick={this.backToShipping}>Back to Shipping</button>
