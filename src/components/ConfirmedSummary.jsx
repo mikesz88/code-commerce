@@ -1,24 +1,31 @@
 import React from "react";
-import s from '../components/PaymentSummary.module.css';
+import s from '../components/ConfirmedSummary.module.css';
 import ShippingSummaryItem from "./ShippingSummaryItem";
+import { CARDICON } from './constants';
 
-class PaymentSummary extends React.Component {
+
+
+class ConfirmedSummary extends React.Component {
     // eslint-disable-next-line no-useless-constructor
     constructor(props) {
         super(props);
     }
-
-    moneyDenomination = amount => amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
     
+    moneyDenomination = amount => amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+
+    lastFour = () => {
+        const card = this.props.payment.paymentInfo.card;
+        return card.slice(card.length - 4);
+    }
+
     render() {
         const { payment, cart, shipping } = this.props;
         const { shippingInfo } = shipping;
-        const amountOfItemsInCart = Object.keys(cart).filter(item => item !== 'display').length;
+        const { cardType } = payment.paymentInfo;
+
         return (
-            <div className={s.paymentSummaryContainer}>
+            <div className={`${s.confirmContainer}`}>
                 <h3 className={`header-sm`}>Summary</h3>
-                <hr />
-                <div><strong>{amountOfItemsInCart} items</strong> in your cart.</div>
                 <div className={s.paymentSummaryItemContainer}>
                     {Object
                     .keys(cart)
@@ -54,21 +61,33 @@ class PaymentSummary extends React.Component {
                     </div>
                     <hr />
                 </div>
-                <div>
-                    <h3 className={`header-sm`}>Shipping Address</h3>
-                    <p></p>
-                    <p>{shippingInfo.firstName} {shippingInfo.lastName}</p>
-                    <p>{shippingInfo.address}</p>
-                    <p>{shippingInfo.cityTown}, {shippingInfo.stateProvince} {shippingInfo.country} {shippingInfo.postCode}</p>
-                    <p>Phone: {shippingInfo.phoneNumber}</p>
-                    <hr />
+                <div className={s.shippingInfoContainer}>
+                    <h3 className={`header-sm`}>Shipping</h3>
+                    <div>{shippingInfo.firstName} {shippingInfo.lastName}</div>
+                    <div>{shippingInfo.address}</div>
+                    <div>{shippingInfo.cityTown}, {shippingInfo.stateProvince} {shippingInfo.country} {shippingInfo.postCode}</div>
+                    <div>Phone: {shippingInfo.phoneNumber}</div>
                     <h3 className={`header-sm`}>Shipping Method</h3>
-                    {shippingInfo.delivery === 'standardDelivery' ? <p>Delivery in 4-6 Business Days</p> : <p>Delivery in 1-3 Business Days</p>}
+                    {shippingInfo.delivery === 'standardDelivery' ? <div>Delivery in 4-6 Business Days</div> : <div>Delivery in 1-3 Business Days</div>}
                 </div>
-                <button form='paymentForm' disabled={this.props.disabled === 4 ? false : true} className={`btn btn-primary round-pill ${s.submitButton}`} type="submit">PAY {this.moneyDenomination(this.props.payment.cartTotal)}</button>
+                <hr />
+                <div>
+                <h3 className={`header-sm`}>Payment</h3>
+                <div className={s.paymentInfoContainer}>
+                    <img className={s.cardIcon} src={CARDICON[cardType]} alt="card" />
+                    <span>{cardType}</span>
+                    <span>Total Payment: {this.moneyDenomination(payment.cartTotal)}</span>
+                    <span>Credit Card: *{this.lastFour()}</span>
+                </div>
+                </div>
+                    {/*
+                        money portion flex right
+                        Shipping details
+                        Payment details
+                  */}
             </div>
         )
     }
 }
 
-export default PaymentSummary;
+export default ConfirmedSummary;

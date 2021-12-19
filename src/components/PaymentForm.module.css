@@ -6,8 +6,13 @@
     padding: 0.5rem;
 }
 
-.cardNumberContainer {
+.flexContainer {
     display: flex;
+}
+
+.flexContainer select {
+    width: 134px;
+    padding: 5px;
 }
 
 .cardNumberTransparentBorder {
@@ -24,6 +29,7 @@
     border: 1px solid rgb(133, 133, 133);
     padding: 1px;
     position: relative;
+    width: 300px;
 }
 
 .inputContainer,
@@ -34,6 +40,11 @@
 .inputContainer label {
     display: inline-block;
     width: 150px;
+}
+
+.inputContainer input {
+    width: 300px;
+    padding: 5px;
 }
 
 .submitButton {

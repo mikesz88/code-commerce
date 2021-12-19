@@ -40,10 +40,10 @@ export const cardExpireValidation = (value) => {
 
 export const onlyTextValidation = (value) => {
     if (value) {
-        if (/^[a-zA-Z]*$/i.test(value)) {
+        if (/^[a-z]([-']?[a-z]+)*( [a-z]([-']?[a-z]+)*)+$/i.test(value)) {
             return undefined;
         } else {
-            return 'Alphabetical letters only'
+            return 'Invalid Name Format'
         }
     } else {
         return 'Required';

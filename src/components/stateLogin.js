@@ -44,7 +44,7 @@ const jasonUser = {
 
 const commerceComponents = {
     storeDisplay : {
-        display: false,
+        display: true,
         items: {
             HTMLandCSSOnly: {
                 price: 99.99,
@@ -114,11 +114,14 @@ const commerceComponents = {
         display: false,
     },
     payment: {
-        display: true,
+        display: false,
         subTotal: 0,
         shippingTotal: 0,
         discount: 0,
         cartTotal: 0,
+    },
+    confirmed: {
+        display: false,
     }
 };
 
@@ -133,6 +136,7 @@ export const stateComponents = {
 
 export const countryList = [
     <option value="">Select</option>,
+    <option value="USA">United States of America</option>,
     <option value="Afganistan">Afghanistan</option>,
     <option value="Albania">Albania</option>,
     <option value="Algeria">Algeria</option>,
@@ -364,7 +368,6 @@ export const countryList = [
     <option value="United Kingdom">United Kingdom</option>,
     <option value="Ukraine">Ukraine</option>,
     <option value="United Arab Erimates">United Arab Emirates</option>,
-    <option value="United States of America">United States of America</option>,
     <option value="Uraguay">Uruguay</option>,
     <option value="Uzbekistan">Uzbekistan</option>,
     <option value="Vanuatu">Vanuatu</option>,

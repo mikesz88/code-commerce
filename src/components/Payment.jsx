@@ -8,7 +8,7 @@ class Payment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            disabledButton: false
+            disabledButton: 0
         }
     }
 
@@ -16,6 +16,7 @@ class Payment extends React.Component {
     updateShipping = (state, func) => this.props.updateShipping(state, func);
     updateStoreDisplay = (state, func) => this.props.updateStoreDisplay(state, func);    
     updatePayment = (state, func) => this.props.updatePayment(state, func);
+    
 
     backToStore = () => {
         this.updatePayment({display: false});
@@ -52,12 +53,14 @@ class Payment extends React.Component {
                 <div className={`container ${s.cartFlex}`}>
                     <PaymentForm 
                         payment={this.props.payment}
-                    />
+                        updatePayment={this.updatePayment}
+                        updateConfirmed={this.props.updateConfirmed}
+                        />
                     <PaymentSummary
                         payment={this.props.payment}
                         cart={this.props.cart}
                         shipping={this.props.shipping}
-                        disabled={this.state.disabledButton}
+                        disabled={this.disabledButton}
                     />
                 </div>
             </>        )

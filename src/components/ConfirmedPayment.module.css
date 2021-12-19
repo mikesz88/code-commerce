@@ -1,0 +1,33 @@
+.confirmContainer {
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.flexContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flexContainer > * {
+    text-align: center;
+    margin: 1rem;
+}
+
+.checkContainer {
+    color: red;
+    font-size: 5rem;
+}
+
+.trackOrderButton {
+    background-color: black;
+    color: blanchedalmond;
+    border-radius: 8px;
+}
+
+.backToHomeButton {
+    background-color: transparent;
+    border-radius: 8px;
+}

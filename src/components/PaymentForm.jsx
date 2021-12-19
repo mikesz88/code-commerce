@@ -10,15 +10,13 @@ import { cardExpireValidation,
 from './validations';
 
 /* 
-4. Start Logic for Payment Form
-Currently working on expiry input and error message
-
-***pictures are potentially too big so shrink them!*** use the small image size to see if that will work
-1. Finish Payment Summary to show shipping information
-2. Finish design of inputs to include errorMessage portions 
-5. Create a Confirmation Component
+1. Finish making the payment disable button for summary side.
+2. pictures are potentially too big so shrink them!*** use the small image size to see if that will work
+3. move the 'back to' buttons to next to the Payment Information title section
+4. Create the css to make a progression to each screen
 5. Reorganize Component Folder to show folders of each component
  and within each a folder showing each component of that.
+6. Color Design
 */
 
 
@@ -27,7 +25,6 @@ const INIT_CARD = {
     card: '',
     expiry: '',
     securityCode: '',
-    error: {}
 }
 
 class PaymentForm extends React.Component {
@@ -42,6 +39,10 @@ class PaymentForm extends React.Component {
             expiryYear: ''
         }
     }
+
+    updatePayment = (state, func) => this.props.updatePayment(state, func);
+    updateConfirmed = (state, func) => this.props.updateConfirmed(state, func);
+
 
     findDebitCardType = (cardNumber) => {
         const regexPattern = {
@@ -75,8 +76,12 @@ class PaymentForm extends React.Component {
                 errorText = onlyTextValidation(value);
                 this.setState(prevState => ({ error: {...prevState.error, cardHolderError: errorText}}))
                 break;
-            case 'expiry':
-                errorText = cardExpireValidation(value);
+            case 'expiryMonth':
+                errorText = cardExpireValidation(this.state.cardData.expiry);
+                this.setState(prevState => ({ error: {...prevState.error, expiryError: errorText}}))
+                break;
+            case 'expiryYear':
+                errorText = cardExpireValidation(this.state.cardData.expiry);
                 this.setState(prevState => ({ error: {...prevState.error, expiryError: errorText}}))
                 break;
             case 'securityCode':
@@ -116,7 +121,7 @@ class PaymentForm extends React.Component {
                 [name]: value,
                 cardData: {
                     ...prevState.cardData,
-                    expiry: value + prevState.expiryYear 
+                    expiry: `${value}/${prevState.expiryYear}` 
                 }
             }))
         } else if (name === 'expiryYear') {
@@ -125,7 +130,7 @@ class PaymentForm extends React.Component {
                 [name]: value,
                 cardData: {
                     ...prevState.cardData,
-                    expiry: prevState.expiryMonth + value
+                    expiry:`${prevState.expiryMonth}/${value}`
                 }
             }))
         } else {
@@ -155,15 +160,26 @@ class PaymentForm extends React.Component {
         return isError;
     }
 
+    proceedToPayment = () => {
+        this.updatePayment({display: false})
+        this.updateConfirmed({display: true})
+    }
+
     handleAddCard = (e) => {
         e.preventDefault();
         const errorCheck = this.checkErrorBeforeSave();
         if (!errorCheck) {
+            this.updatePayment({paymentInfo: {
+                ...this.state.cardData,
+                cardType: this.state.cardType,
+            }});
             this.setState({
                 cardData: INIT_CARD,
                 cardType: null,
             });
-        }        
+            this.proceedToPayment();
+        }
+
     }
 
     moneyDenomination = amount => amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
@@ -173,6 +189,8 @@ class PaymentForm extends React.Component {
         const { 
             cardData, error, cardType, maxLength
         } = this.state;
+
+        const paymentFieldsFilled = (Object.keys(cardData).every(item => cardData[item]))
 
         const errorCardHolderMessage =  (
             error
@@ -186,6 +204,20 @@ class PaymentForm extends React.Component {
             && error['cardError']
             && error['cardError'].length > 1)
             ? error['cardError']
+            : null;
+
+        const errorExpiryMessage = (
+            error 
+            && error['expiryError']
+            && error['expiryError'].length > 1) 
+            ? error['expiryError']
+            : null;
+            
+        const errorSecurityCodeMessage = (
+            error
+            && error['securityCodeError']
+            && error['securityCodeError'].length > 1)
+            ? error['securityCodeError']
             : null;
 
         return (
@@ -206,7 +238,7 @@ class PaymentForm extends React.Component {
                         />
                         {errorCardHolderMessage && <span className={s.error}>{errorCardHolderMessage}</span>}
                     </div>
-                    <div className={`${s.inputContainer} ${s.cardNumberContainer}`}>
+                    <div className={`${s.inputContainer} ${s.flexContainer}`}>
                         <label>Card Number</label>
                         <div className={s.cardNumberInputBorder}>
                             <input
@@ -224,8 +256,8 @@ class PaymentForm extends React.Component {
                                 <img
                                     style={{
                                         position: 'absolute',
-                                        top: '5px',
-                                        right: '10px',
+                                        top: '0',
+                                        right: '0',
                                         width: '50px',
                                         height: '33px'
                                     }}
@@ -234,12 +266,11 @@ class PaymentForm extends React.Component {
                                 />
                             )}
                         </div>
-                        {errorCardNumberMessage && <div className={s.error}>{errorCardNumberMessage}</div>}
-                        
+                        {errorCardNumberMessage && <div className={s.error}>{errorCardNumberMessage}</div>} 
                     </div>
-                    <div className={s.inputContainer}>
+                    <div className={`${s.flexContainer} ${s.inputContainer}`}>
                         <label>Exp.Date</label>
-                        <select onChange={this.handleInputData} name="expiryMonth" id="expiryMonth">
+                        <select onChange={this.handleInputData} onBlur={this.handleBlur} name="expiryMonth" id="expiryMonth">
                             <option value="" disabled selected></option>
                             <option value="01">01</option>
                             <option value="02">02</option>
@@ -254,7 +285,7 @@ class PaymentForm extends React.Component {
                             <option value="11">11</option>
                             <option value="12">12</option>
                         </select>
-                        <select onChange={this.handleInputData} name="expiryYear" id="expiryYear">
+                        <select onChange={this.handleInputData} onBlur={this.handleBlur} name="expiryYear" id="expiryYear">
                             <option value="" disabled selected></option>
                             <option value="22">22</option>
                             <option value="23">23</option>
@@ -262,19 +293,20 @@ class PaymentForm extends React.Component {
                             <option value="25">25</option>
                             <option value="26">26</option>
                         </select>
+                        {errorExpiryMessage && <div className={s.error}>{errorExpiryMessage}</div>}                            
                     </div>
-                    <div className={s.inputContainer}>
+                    <div className={`${s.flexContainer} ${s.inputContainer}`}>
                         <label>CVV</label>
                         <input 
                         onChange={this.handleInputData} 
                         onBlur={this.handleBlur} 
                         type="number" 
                         name="securityCode"
-                        
                         />
+                        {errorSecurityCodeMessage && <div className={s.error}>{errorSecurityCodeMessage}</div>}                            
                     </div>
                     <div className={`${s.submitButton}`}>
-                        <button className={`btn btn-primary round-pill`} type="submit">PAY {this.moneyDenomination(this.props.payment.cartTotal)}</button>
+                        <button disabled={!paymentFieldsFilled} className={`btn btn-primary round-pill`} type="submit">PAY {this.moneyDenomination(this.props.payment.cartTotal)}</button>
                     </div>
                 </form>
             </div>

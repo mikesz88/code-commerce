@@ -6,6 +6,7 @@ import Cart from './Cart';
 import Shipping from './Shipping';
 import Payment from './Payment';
 import { stateComponents } from './stateLogin';
+import Confirmed from './Confirmed';
 
 class Commerce extends React.Component {
     constructor() {
@@ -47,15 +48,17 @@ class Commerce extends React.Component {
       updatePayment = (state, func) => this.updateSubState('commerceComponents', 'payment', state, func);
       updateShipping = (state, func) => this.updateSubState('commerceComponents', 'shipping', state, func);
       updateStoreDisplay = (state, func) => this.updateSubState('commerceComponents', 'storeDisplay', state, func);
+      updateConfirmed = (state, func) => this.updateSubState('commerceComponents', 'confirmed', state, func);
       updateCurrentUser = (state, func) => this.updateState('currentUser', state, func);
       updateUserList = (state, func) => this.updateState('users', state, func);
+      resetState = () => this.updateState(this.state, stateComponents)
       deleteCartItem = name => this.deleteStateVariable('commerceComponents', 'cart', name);
       deletePaymentItem = name => this.deleteStateVariable('commerceComponents', 'payment', name);
 
 
 
     render() {
-        const {storeDisplay, login, cart, shipping, payment } = this.state.commerceComponents;
+        const {storeDisplay, login, cart, shipping, payment, confirmed } = this.state.commerceComponents;
         const { users, currentUser} = this.state;
 
         return(
@@ -110,8 +113,16 @@ class Commerce extends React.Component {
                     updatePayment={this.updatePayment}
                     updateStoreDisplay={this.updateStoreDisplay}
                     updateShipping={this.updateShipping}
+                    updateConfirmed={this.updateConfirmed}
                 />}
-                {/* Confirmation Screen Needed or ternary with payment? */}
+                {confirmed.display && <Confirmed 
+                    cart={cart}
+                    payment={payment}
+                    shipping={shipping}
+                    updateStoreDisplay={this.updateStoreDisplay}
+                    updateConfirmed={this.updateConfirmed}
+                    resetState={this.resetState}
+                />}
             </div>
         )
     }
