@@ -1,0 +1,22 @@
+.cartFlex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.storeButtonCenter {
+    margin: 1rem auto;
+    text-align: center;
+}
+
+@media only screen and (max-width: 430px) {
+    .cartFlex {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cartFlex > div {
+        margin: 1rem;
+    } 
+}

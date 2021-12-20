@@ -1,4 +1,4 @@
-import Commerce from './components/Commerce';
+import Commerce from './components/Commerce/Commerce';
 
 function App() {
   return (

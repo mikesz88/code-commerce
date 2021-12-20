@@ -1,0 +1,63 @@
+.cardFormContainer {
+    flex: 1;
+    border: 1px solid black;
+    margin-right: 0.5rem;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.flexContainer {
+    display: flex;
+}
+
+.flexContainer select {
+    width: 134px;
+    padding: 5px;
+}
+
+.cardNumberTransparentBorder {
+    border: none;
+    background: transparent;
+    padding: 1px 2px;
+}
+
+.cardNumberTransparentBorder:focus {
+    outline: none;
+}
+
+.cardNumberInputBorder {
+    border: 1px solid rgb(133, 133, 133);
+    padding: 1px;
+    position: relative;
+    width: 300px;
+}
+
+.inputContainer,
+.inputContainer > * {
+    margin: 1rem;
+}
+
+.inputContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.inputContainer label {
+    display: inline-block;
+    width: 150px;
+}
+
+.inputContainer input {
+    width: 300px;
+    padding: 5px;
+}
+
+.submitButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.error {
+    color: red;
+}
