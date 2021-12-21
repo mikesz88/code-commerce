@@ -1,9 +1,14 @@
 .shippingInfoContainer {
     flex: 1;
-    border: 1px solid black;
     margin-right: 0.5rem;
+    background-color: rgba(59, 62, 64, 0.5);
     border-radius: 8px;
     padding: 0.5rem;
+}
+
+.selectInputBackground {
+    background-color: rgba(59, 62, 64, 0.5);
+    color: rgba(255, 255, 255, .87);
 }
 
 .flexColumn {
@@ -32,10 +37,6 @@ table {
     margin: 0 auto;
 }
 
-/* table tr th {
-    vertical-align: bottom;
-} */
-
 .flexContainer {
     display: flex;
     justify-content: flex-start;
@@ -48,10 +49,9 @@ table {
     width: 300px;
     padding: 1rem;
     border: none;
-    border-bottom: 1px solid #ccc;
 }
 
 .errorMessage {
     padding-left: 1rem;
-    color: red;
+    color: #cf6679;
 }

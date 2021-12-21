@@ -59,7 +59,7 @@ class CartItems extends React.Component {
                 <hr />
                 <div className={`cartFlex`}>
                     <div className={`product productFlex`}>
-                        <button onClick={this.deleteFromCart}><i className="fas fa-times-circle"></i></button>
+                        <button className={s.deleteButton} onClick={this.deleteFromCart}><i className="fas fa-times-circle"></i></button>
                         <div className={`img-container`}>
                             <img src={img} alt="" />
                         </div>
@@ -85,17 +85,17 @@ class CartItems extends React.Component {
                     </div>
 
                     <div className={`other`}>
-                        <select name={name} id={name} onChange={this.quantityCount}>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
+                        <select className={s.selectDesign} name={name} id={name} onChange={this.quantityCount}>
+                            <option className={s.selectDesign} value="1">1</option>
+                            <option className={s.selectDesign} value="2">2</option>
+                            <option className={s.selectDesign} value="3">3</option>
+                            <option className={s.selectDesign} value="4">4</option>
+                            <option className={s.selectDesign} value="5">5</option>
+                            <option className={s.selectDesign} value="6">6</option>
+                            <option className={s.selectDesign} value="7">7</option>
+                            <option className={s.selectDesign} value="8">8</option>
+                            <option className={s.selectDesign} value="9">9</option>
+                            <option className={s.selectDesign} value="10">10</option>
                         </select>
                     </div>
 

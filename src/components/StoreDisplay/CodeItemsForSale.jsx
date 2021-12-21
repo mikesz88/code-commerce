@@ -78,8 +78,8 @@ class CodeItemsForSale extends React.Component {
                         <img src={codeItems[code][img]} alt="" />
                         <p className={`caption`}>${codeItems[code][price]}</p>
                         {!Object.keys(this.props.cart).includes(code)
-                        ? <button onClick={() => this.checkLogin(code, codeItems[code])}>Add to Cart</button>
-                        : <button onClick={() => this.deleteItem(code, codeItems[code])}>Remove from Cart</button>}
+                        ? <button className={`btn btn-primary round-pill`} onClick={() => this.checkLogin(code, codeItems[code])}>Add to Cart</button>
+                        : <button className={`btn btn-primary round-pill`} onClick={() => this.deleteItem(code, codeItems[code])}>Remove from Cart</button>}
                     </div>
                 ))}
                 </div>

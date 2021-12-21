@@ -55,7 +55,9 @@ class ShippingSummary extends React.Component {
                     </div>
                     <hr />
                 </div>
-                <button type='submit' form='shippingForm' disabled={disabledButton} >PAYMENT</button>
+                <div className={s.paymentButton}>
+                    <button className='btn btn-primary round-pill' type='submit' form='shippingForm' disabled={disabledButton} >PAYMENT</button>
+                </div>
             </div>
         )
     }

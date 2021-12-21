@@ -1,9 +1,9 @@
 .cartSummaryContainer {
     width: 300px;
-    border: 1px solid black;
     margin-left: 0.5rem;
     border-radius: 8px;
     padding: 0.5rem;
+    background-color: rgba(59, 62, 64, 0.5);
 }
 
 .error {
@@ -17,4 +17,14 @@
     align-items: center;
     padding-left: 2rem;
     padding-right: 2rem;
+}
+
+.summaryButton {
+    padding: 0.1rem;
+    min-width: initial;
+    height: initial;
+}
+
+.checkOutButton {
+    text-align: center;
 }

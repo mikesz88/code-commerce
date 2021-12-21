@@ -257,10 +257,11 @@ class PaymentForm extends React.Component {
                                 <img
                                     style={{
                                         position: 'absolute',
-                                        top: '0',
-                                        right: '0',
-                                        width: '50px',
-                                        height: '33px'
+                                        top: '1px',
+                                        right: 0,
+                                        width: '25%',
+                                        height: '94%',
+                                        backgroundColor: 'rgba(255, 255, 255, .87)',
                                     }}
                                     src={CARDICON[cardType]} 
                                     alt="card" 
@@ -271,7 +272,7 @@ class PaymentForm extends React.Component {
                     </div>
                     <div className={`${s.flexContainer} ${s.inputContainer}`}>
                         <label>Exp.Date</label>
-                        <select onChange={this.handleInputData} onBlur={this.handleBlur} name="expiryMonth" id="expiryMonth">
+                        <select className={s.selectBackground} onChange={this.handleInputData} onBlur={this.handleBlur} name="expiryMonth" id="expiryMonth">
                             <option value="" disabled selected>Month</option>
                             <option value="01">01</option>
                             <option value="02">02</option>
@@ -286,7 +287,7 @@ class PaymentForm extends React.Component {
                             <option value="11">11</option>
                             <option value="12">12</option>
                         </select>
-                        <select onChange={this.handleInputData} onBlur={this.handleBlur} name="expiryYear" id="expiryYear">
+                        <select className={s.selectBackground} onChange={this.handleInputData} onBlur={this.handleBlur} name="expiryYear" id="expiryYear">
                             <option value="" disabled selected>Year</option>
                             <option value="22">22</option>
                             <option value="23">23</option>

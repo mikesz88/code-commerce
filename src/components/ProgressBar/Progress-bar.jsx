@@ -18,7 +18,7 @@ class ProgressBar extends React.Component {
           const fillerStyles = {
             height: '100%',
             width: `${completed}%`,
-            backgroundColor: 'red',
+            backgroundColor: '#bb86fc',
             borderRadius: 'inherit',
             textAlign: 'right'
           }
@@ -40,8 +40,17 @@ class ProgressBar extends React.Component {
             marginBottom: '1rem',
           }
 
+          const backgroundColor = {
+            backgroundColor: 'rgba(59, 62, 64, 0.5)',
+            paddingTop: '1rem',
+            paddingBottom: '1rem',
+            borderRadius: 8,
+            marginBottom: '1rem'
+          }
+
         return (
-            <div className="container">
+          <div className="container">
+            <div className="container" style={backgroundColor}>
                 <div style={containerStyles}>
                     <div style={fillerStyles}>
                         <span style={labelStyles}>{`${completed}%`}</span>
@@ -54,6 +63,7 @@ class ProgressBar extends React.Component {
                     <span>Confirmation</span>
                 </div>
             </div>
+          </div>
         );
     }
 }

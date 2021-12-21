@@ -1,0 +1,15 @@
+.selectDesign {
+    background-color: rgb(59, 62, 64);
+    color: rgba(255, 255, 255, .87);
+}
+
+.deleteButton {
+    background-color: transparent;
+    border: none;
+    color: rgba(255, 255, 255, .87);
+}
+
+.deleteButton:hover {
+    background-color: rgb(59, 62, 64);
+    box-shadow: 0 0 20px 5px rgb(59, 62, 64);
+}

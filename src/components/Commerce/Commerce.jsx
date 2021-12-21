@@ -82,7 +82,8 @@ class Commerce extends React.Component {
                     deleteCartItem={this.deleteCartItem}
                     deletePaymentItem={this.deletePaymentItem}
                 />}
-                {login.display && <Login 
+                {login.display 
+                && <Login 
                     users={users}
                     updateLogin={this.updateLogin}
                     updateCart={this.updateCart}
@@ -90,7 +91,8 @@ class Commerce extends React.Component {
                     updateUserList={this.updateUserList}
                     updateStoreDisplay={this.updateStoreDisplay}
                 />}
-                {cart.display && <Cart 
+                {cart.display 
+                && <Cart 
                     cart={cart}
                     payment={payment}
                     updateCart={this.updateCart}
@@ -100,7 +102,8 @@ class Commerce extends React.Component {
                     deleteCartItem={this.deleteCartItem}
                     deletePaymentItem={this.deletePaymentItem}
                 />}
-                {shipping.display && <Shipping
+                {shipping.display 
+                && <Shipping
                     cart={cart}
                     payment={payment}
                     shipping={shipping}
@@ -109,7 +112,8 @@ class Commerce extends React.Component {
                     updateStoreDisplay={this.updateStoreDisplay}
                     updateShipping={this.updateShipping}
                 />}
-                {payment.display && <Payment
+                {payment.display 
+                && <Payment
                     cart={cart}
                     payment={payment}
                     shipping={shipping}
@@ -121,7 +125,8 @@ class Commerce extends React.Component {
                     updateConfirmed={this.updateConfirmed}
                     updateCurrentUser={this.updateCurrentUser}
                 />}
-                {confirmed.display && <Confirmed 
+                {confirmed.display 
+                && <Confirmed 
                     cart={cart}
                     payment={payment}
                     shipping={shipping}

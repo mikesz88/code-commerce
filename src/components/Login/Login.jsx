@@ -321,8 +321,8 @@ class Login extends React.Component {
             {...passwordInputData}
             />
           {eye 
-          ? <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button> 
-          : <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye"></i></button>}
+          ? <button className={s.eyeButton} id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button> 
+          : <button className={s.eyeButton} id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye"></i></button>}
         </div>
           {error.password && <div className={s.error}>{error.password}</div>}
         <p className={`${s.finePrint}`}>
@@ -350,15 +350,19 @@ class Login extends React.Component {
           {...postCodeInputData}
           />
           {error.postCode && <div className={s.error}>{error.postCode}</div>}
-        <button className={`${s.input} ${s.marginAndPadding}`} type="submit">
+        <button 
+          className={`${s.marginAndPadding} btn btn-primary round-pill`}
+          type="submit">
           SAVE
         </button>
         <div className={` ${s.width} ${s.surroundingLine}`}>or</div>
-        <button className={`${s.input} ${s.marginAndPadding}`} type="submit">
+        <button 
+          className={`${s.input} ${s.marginAndPadding} btn round-pill ${s.facebookBtn}`}
+          type="submit">
           SIGN UP WITH FACEBOOK
         </button>
         <button
-          className={`${s.input} ${s.marginAndPadding}`}
+          className={`${s.marginAndPadding} btn btn-primary round-pill`}
           onClick={this.backToStore}
           type="reset"
         >
@@ -369,7 +373,6 @@ class Login extends React.Component {
             | 
             <a href="https://www.google.com" target="_blank" rel="noopener noreferrer">Terms of Sale and Use</a>
         </div>
-        {/* then create the logic */}
       </div>
     );
   };
@@ -405,9 +408,9 @@ class Login extends React.Component {
           {...passwordInputData}
         />
           {eye 
-          ? <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye"></i></button> 
-          : <button id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button>}        </div>
-        <button className={`${s.input} ${s.marginAndPadding}`} type="submit">
+          ? <button className={s.eyeButton} id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye"></i></button> 
+          : <button className={s.eyeButton} id="userPassword" type="button" onClick={this.eyeFlip}><i className="fas fa-eye-slash"></i></button>}        </div>
+        <button className={`${s.marginAndPadding} btn btn-primary round-pill`} type="submit">
           SIGN IN
         </button>
       </div>
@@ -422,31 +425,34 @@ class Login extends React.Component {
     ];
 
     return (
-      <div className={`container`}>
-        <form onSubmit={this.handleSubmit}>
-          <div className={s.formContainer}>
-            <button className={s.direction} type="reset" onClick={this.backToStore}>
-              <i className={`fas fa-times`}></i>
-            </button>
-            <h3>New User or Returning?</h3>
-            <div>
-              {inputData.length ? inputData.map(item => (
-                <>
-                  <input
-                  type={item.type}
-                  name={item.name}
-                  value={item.value}
-                  id={item.id}
-                  onChange={item.onChange}
-                  defaultChecked={item.defaultChecked}
-                  /> 
-                  <label for={item.name}>{item.text}</label>
-                </>
-              )) : null}
+      <div className="container">
+        <div className={`container ${s.loginBackground}`}>
+          <form onSubmit={this.handleSubmit}>
+            <div className={s.formContainer}>
+              <button className={s.direction} type="reset" onClick={this.backToStore}>
+                <i className={`fas fa-times`}></i>
+              </button>
+              <h3>New User or Returning?</h3>
+              <div>
+                {inputData.length ? inputData.map((item, index) => (
+                  <>
+                    <input
+                    key={index}
+                    type={item.type}
+                    name={item.name}
+                    value={item.value}
+                    id={item.id}
+                    onChange={item.onChange}
+                    defaultChecked={item.defaultChecked}
+                    /> 
+                    <label>{item.text}</label>
+                  </>
+                )) : null}
+              </div>
             </div>
-          </div>
-          {this.loginType() ? this.newUser() : this.returningUser()}
-        </form>
+            {this.loginType() ? this.newUser() : this.returningUser()}
+          </form>
+        </div>
       </div>
     );
   }

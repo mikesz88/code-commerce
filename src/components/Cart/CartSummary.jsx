@@ -81,11 +81,11 @@ class CartSummary extends React.Component {
                         <label className={`caption`}>Do you have a promo code?</label>
                         <form onSubmit={this.onSubmit}>
                             <input type="text" name="coupon" id="coupon" placeholder='code' onChange={this.handleChange}/>
-                            <button disabled={discountDisabled} type="submit">APPLY</button>
+                            <button className={`btn btn-primary round-pill ${s.summaryButton}`} disabled={discountDisabled} type="submit">APPLY</button>
                             {error 
                             ? <div className={s.error}>{error}</div> 
                             : null}
-                            <button onClick={this.resetCoupon} type='reset'>RESET</button>
+                            <button className={`btn btn-primary round-pill ${s.summaryButton}`} onClick={this.resetCoupon} type='reset'>RESET</button>
                         </form>
                     </div>
                     <hr />
@@ -108,7 +108,9 @@ class CartSummary extends React.Component {
                         </div>
                         <hr />
                     </div>
-                    <button disabled={this.checkOutButton()} onClick={this.checkout}>CHECKOUT</button>
+                    <div className={s.checkOutButton}>
+                        <button className='btn btn-primary round-pill' disabled={this.checkOutButton()} onClick={this.checkout}>CHECKOUT</button>
+                    </div>
             </div>
         )
     }

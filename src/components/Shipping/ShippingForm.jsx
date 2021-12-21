@@ -207,45 +207,45 @@ class ShippingForm extends React.Component {
                 <hr />
                 <form id='shippingForm' onSubmit={this.onSubmit}>
                     <div className={s.flexContainer}>
-                        <select onBlur={this.handleBlur} onChange={this.handleInputData} name="addressTitle" id="addressTitle">
-                            <option className={s.firstOption} value="">Type of Address</option>,
+                        <select className={s.selectInputBackground} onBlur={this.handleBlur} onChange={this.handleInputData} name="addressTitle" id="addressTitle">
+                            <option value="">Type of Address</option>,
                             <option value="residence" defaultChecked>Residence</option>
                             <option value="business">Business</option>
                         </select>                                    
                         {addressTitle ? (<div className={s.errorMessage}>{addressTitle}</div>) : null}
                     </div>                      
                     <div className={s.flexContainer}>
-                        <input placeholder='First Name' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="firstName" id="firstName" autoComplete='off' value={this.state.firstName}/>
+                        <input  className={s.selectInputBackground} placeholder='First Name' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="firstName" id="firstName" autoComplete='off' value={this.state.firstName}/>
                         {firstName ? (<div className={s.errorMessage}>{firstName}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='Last Name' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="lastName" id="lastName" autoComplete='off' value={this.state.lastName}/>
+                        <input className={s.selectInputBackground} placeholder='Last Name' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="lastName" id="lastName" autoComplete='off' value={this.state.lastName}/>
                         {lastName ? (<div className={s.errorMessage}>{lastName}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='Address' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="address" id="address" autoComplete='off' value={this.state.address}/>
+                        <input className={s.selectInputBackground} placeholder='Address' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="address" id="address" autoComplete='off' value={this.state.address}/>
                         {address ? (<div className={s.errorMessage}>{address}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='Zip Code' onBlur={this.handleBlur} onChange={this.handleInputData} type="number" name="postCode" id="postCode" autoComplete='off' value={this.state.postCode}/>
+                        <input className={s.selectInputBackground} placeholder='Zip Code' onBlur={this.handleBlur} onChange={this.handleInputData} type="number" name="postCode" id="postCode" autoComplete='off' value={this.state.postCode}/>
                         {postCode ? (<div className={s.errorMessage}>{postCode}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <select onBlur={this.handleBlur} onChange={this.handleInputData} name="country" id="country">
+                        <select className={s.selectInputBackground} onBlur={this.handleBlur} onChange={this.handleInputData} name="country" id="country">
                         {countryList}
                         </select>
                         {country ? (<div className={s.errorMessage}>{country}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='City/Town' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="cityTown" id="cityTown" autoComplete='off' value={this.state.cityTown}/>
+                        <input className={s.selectInputBackground} placeholder='City/Town' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="cityTown" id="cityTown" autoComplete='off' value={this.state.cityTown}/>
                         {cityTown ? (<div className={s.errorMessage}>{cityTown}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='State/Province' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="stateProvince" id="stateProvince" autoComplete='off' value={this.state.stateProvince}/>
+                        <input  className={s.selectInputBackground} placeholder='State/Province' onBlur={this.handleBlur} onChange={this.handleInputData} type="text" name="stateProvince" id="stateProvince" autoComplete='off' value={this.state.stateProvince}/>
                         {stateProvince ? (<div className={s.errorMessage}>{stateProvince}</div>) : null}
                     </div>
                     <div className={s.flexContainer}>
-                        <input placeholder='Phone' onBlur={this.handleBlur} onChange={this.handleInputData} type="tel" name="phoneNumber" id="phoneNumber" maxLength='14' value={this.state.phoneNumber} autoComplete='off'/>
+                        <input className={s.selectInputBackground} placeholder='Phone' onBlur={this.handleBlur} onChange={this.handleInputData} type="tel" name="phoneNumber" id="phoneNumber" maxLength='14' value={this.state.phoneNumber} autoComplete='off'/>
                         {phone ? (<div className={s.errorMessage}>{phone}</div>) : null}
                     </div>
                 </form>

@@ -69,7 +69,14 @@ class PaymentSummary extends React.Component {
                     <h3 className={`header-sm`}>Shipping Method</h3>
                     {shippingInfo.delivery === 'standardDelivery' ? <p>Delivery in 4-6 Business Days</p> : <p>Delivery in 1-3 Business Days</p>}
                 </div>
-                <button form='paymentForm' disabled={disabledButton} className={`btn btn-primary round-pill ${s.submitButton}`} type="submit">PAY {this.moneyDenomination(this.props.payment.cartTotal)}</button>
+                <div className={s.paymentButton}>
+                    <button 
+                        form='paymentForm' 
+                        disabled={disabledButton} 
+                        className={`btn btn-primary round-pill ${s.submitButton}`} 
+                        type="submit">PAY {this.moneyDenomination(this.props.payment.cartTotal)}
+                    </button>
+                </div>
             </div>
         )
     }
