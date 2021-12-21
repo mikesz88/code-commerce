@@ -11,9 +11,9 @@ class ShippingSummary extends React.Component {
     moneyDenomination = amount => amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
 
     render() {
-        const { payment, cart } = this.props;
+        const { payment, cart, disabled } = this.props;
         const amountOfItemsInCart = Object.keys(cart).filter(item => item !== 'display').length;
-        const disabledButton = (Object.keys(this.props.disabled).some(item => this.props.disabled[item] === true));
+        const disabledButton = (Object.keys(disabled).some(item => disabled[item] === true));
         return (
             <div className={s.ShippingSummaryContainer}>
                 <h3 className={`header-sm`}>Summary</h3>

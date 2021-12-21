@@ -60,6 +60,8 @@ class Payment extends React.Component {
     
     
     render() {
+        const {payment, cart, shipping, currentUser, updateConfirmed, updateCurrentUser} = this.props;
+
         return (
             <>
                 <ProgressBar 
@@ -68,19 +70,19 @@ class Payment extends React.Component {
                 />
                 <div className={`container ${s.cartFlex}`}>
                     <PaymentForm 
-                        payment={this.props.payment}
-                        cart={this.props.cart}
-                        shipping={this.props.shipping}
-                        currentUser={this.props.currentUser}
+                        payment={payment}
+                        cart={cart}
+                        shipping={shipping}
+                        currentUser={currentUser}
                         updatePayment={this.updatePayment}
-                        updateConfirmed={this.props.updateConfirmed}
-                        updateCurrentUser={this.props.updateCurrentUser}
+                        updateConfirmed={updateConfirmed}
+                        updateCurrentUser={updateCurrentUser}
                         updateDisabledButton={this.updateDisabledButton}
                         />
                     <PaymentSummary
-                        payment={this.props.payment}
-                        cart={this.props.cart}
-                        shipping={this.props.shipping}
+                        payment={payment}
+                        cart={cart}
+                        shipping={shipping}
                         disabled={this.state.disabled}
                     />
                 </div>
