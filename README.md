@@ -27,7 +27,7 @@ Note: Please do NOT use React Routing in this project. You will learn this later
 
 ***Signup/Login***
 
-Requirements
+## Requirements
 
     1. User can sign-in
     2. Password field is obscured
@@ -45,7 +45,7 @@ Requirements
 
 ***Customer Cart***
 
-Requirements
+## Requirements
 
     1. Create a cart that has 2-5 items in it
     2. These should be actual components with item value
@@ -56,7 +56,7 @@ Requirements
 
 ***Shipping Information***
 
-Requirements
+## Requirements
 
     1. Show all shipping fields as depicted in the screenshot below
     2. Have standard and express shipping options -- the shipping & handling/checkout prices should adjust accordingly
@@ -68,7 +68,7 @@ Requirements
 
 ***Payment Information***
 
-Requirements
+## Requirements
 
     1. Create a credit card formatted that takes all major credit cards (Visa, Master Card, American Express, etc
     2. Format the credit card field so the numbers are properly spaced (we don't want it to look ugly!)
@@ -80,7 +80,7 @@ Requirements
 
 ***Confirmation Screen***
 
-Requirements
+## Requirements
 
     1. Should show amount paid
     2. Should show last 4 digits of credit card used to make the purchase
